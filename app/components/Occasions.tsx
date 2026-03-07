@@ -1,4 +1,6 @@
 import Image from 'next/image';
+import Link from 'next/link';
+import { INSTAGRAM_DM_URL } from '@/lib/constants';
 
 interface Deco {
   w: number;
@@ -13,6 +15,7 @@ interface Deco {
 interface Category {
   title: string;
   subtitle: string;
+  href: string;
   gradient: string;
   image?: string;
   alt?: string;
@@ -24,6 +27,7 @@ const categories: Category[] = [
   {
     title: 'Chocolate Boxes',
     subtitle: 'Heart boxes \u00b7 Square box \u00b7 Football box',
+    href: '/chocolate-boxes',
     gradient: 'linear-gradient(145deg, rgba(15,7,5,0.6) 0%, rgba(44,21,9,0.55) 40%, rgba(92,48,24,0.45) 70%, rgba(141,90,48,0.4) 100%)',
     image: '/images/chocolate-boxes/i-love-you-heart-chocolate-box-truffles.jpeg',
     alt: 'Handcrafted I Love You heart chocolate box with dark and white chocolate dipped strawberries and truffles by The Chocolate Affair Glasgow',
@@ -37,6 +41,7 @@ const categories: Category[] = [
   {
     title: 'Cakes & Cupcakes',
     subtitle: 'Cakes \u00b7 Cakesicles \u00b7 Teacup cupcakes',
+    href: '/cakes-cupcakes',
     gradient: 'linear-gradient(145deg, rgba(122,58,53,0.6) 0%, rgba(201,145,138,0.5) 45%, rgba(232,196,187,0.4) 80%, rgba(245,225,208,0.35) 100%)',
     image: '/images/cakes-cupcakes/bespoke-21st-birthday-white-chocolate-heart-cake-gold.jpeg',
     alt: 'Bespoke 21st birthday white chocolate heart cake with gold pearl cascade and glitter lettering',
@@ -49,6 +54,7 @@ const categories: Category[] = [
   {
     title: 'Treat Boxes & Baskets',
     subtitle: 'Mix treat box \u00b7 Candy box \u00b7 Gift baskets',
+    href: '/treat-boxes',
     gradient: 'linear-gradient(145deg, rgba(44,31,26,0.6) 0%, rgba(94,74,60,0.5) 50%, rgba(188,168,159,0.4) 100%)',
     image: '/images/treat-boxes/luxury-mixed-treat-box-chocolate-strawberries-dates.jpeg',
     alt: 'Luxury mixed treat box with chocolate-dipped strawberries and assorted chocolate-covered dates',
@@ -61,6 +67,7 @@ const categories: Category[] = [
   {
     title: 'Sweet Treats',
     subtitle: 'Truffles \u00b7 Fudge \u00b7 Strawberries \u00b7 Fruit platters',
+    href: '/sweet-treats',
     gradient: 'linear-gradient(145deg, rgba(92,26,42,0.6) 0%, rgba(160,69,90,0.5) 40%, rgba(201,145,138,0.4) 75%, rgba(240,208,192,0.35) 100%)',
     image: '/images/sweet-treats/handcrafted-pink-purple-chocolate-dipped-strawberries-floral.jpeg',
     alt: 'Handcrafted pink and purple chocolate-dipped strawberries with floral and butterfly decorations',
@@ -73,6 +80,7 @@ const categories: Category[] = [
   {
     title: 'Novelty & Themed',
     subtitle: 'Smash pi\u00f1ata \u00b7 Themed creations \u00b7 Baby items',
+    href: '/novelty-themed',
     gradient: 'linear-gradient(145deg, rgba(26,15,26,0.6) 0%, rgba(61,31,53,0.5) 45%, rgba(122,58,96,0.45) 75%, rgba(201,97,138,0.4) 100%)',
     image: '/images/novelty-themed/ramadan-mubarak-crescent-moon-chocolate-gift-box.jpeg',
     alt: 'Ramadan Mubarak crescent moon chocolate gift box with gold-dusted truffles and butterfly decorations',
@@ -85,6 +93,7 @@ const categories: Category[] = [
   {
     title: 'Gifts & UK Postal',
     subtitle: 'Water bottles \u00b7 Gift sets \u00b7 Nationwide delivery',
+    href: INSTAGRAM_DM_URL,
     gradient: 'linear-gradient(145deg, #3d2b24 0%, #8d6f57 45%, #bca89f 75%, #e4d5c7 100%)',
     deco: [
       { w: 130, h: 130, top: '-10%', right: '-5%', opacity: 0.1 },
@@ -104,9 +113,15 @@ interface CategoryCardProps {
 }
 
 function CategoryCard({ cat, className, sizes, priority, subtitleClass, overlayGradient }: CategoryCardProps) {
+  const isExternal = cat.href.startsWith('http');
+  const Wrapper = isExternal ? 'a' : Link;
+  const linkProps = isExternal
+    ? { href: cat.href, target: '_blank' as const, rel: 'noopener noreferrer' }
+    : { href: cat.href };
+
   return (
-    <a
-      href="#products"
+    <Wrapper
+      {...linkProps}
       className={`group relative overflow-hidden rounded-2xl ${className}`}
       style={cat.image ? undefined : { background: cat.gradient }}
     >
@@ -155,11 +170,11 @@ function CategoryCard({ cat, className, sizes, priority, subtitleClass, overlayG
           {cat.subtitle}
         </p>
         <div className="flex items-center gap-1.5 text-xs font-semibold text-rose-gold-light opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-          Browse
+          {isExternal ? 'Enquire' : 'Browse'}
           <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
         </div>
       </div>
-    </a>
+    </Wrapper>
   );
 }
 
@@ -176,13 +191,13 @@ export default function Occasions() {
               What We Make
             </h2>
           </div>
-          <a
+          <Link
             href="#products"
             className="hidden md:flex items-center gap-2 text-sm font-semibold text-mocha hover:text-rose-gold transition-colors"
           >
-            View all
-            <span className="inline-block transition-transform hover:translate-x-1">&rarr;</span>
-          </a>
+            Featured
+            <span className="inline-block transition-transform hover:translate-x-1">&darr;</span>
+          </Link>
         </div>
 
         <div className="grid grid-cols-12 gap-3">

@@ -3,8 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import { ShoppingBag, ChevronLeft, ChevronRight } from 'lucide-react';
-
-const INSTAGRAM_URL = 'https://www.instagram.com/personalize_it_glasgow_/';
+import { getOrderDmUrl } from '@/lib/constants';
 
 interface Product {
   name: string;
@@ -21,7 +20,7 @@ interface Product {
 const products: Product[] = [
   {
     name: 'Birthday Pink Heart Chocolate Box',
-    price: '£34.99',
+    price: '£50',
     badge: 'Best Seller',
     badgeBg: 'bg-espresso',
     gradientFrom: '#2C1F1A',
@@ -32,7 +31,7 @@ const products: Product[] = [
   },
   {
     name: 'Luxury Mixed Treat Box',
-    price: '£44.99',
+    price: 'DM for price',
     badge: 'Premium',
     badgeBg: 'bg-rich-amber',
     gradientFrom: '#6B5148',
@@ -43,7 +42,7 @@ const products: Product[] = [
   },
   {
     name: "Mother's Day Heart Chocolate Box",
-    price: '£36.99',
+    price: '£50',
     badge: 'Popular',
     badgeBg: 'bg-rose-gold',
     gradientFrom: '#5E4A3C',
@@ -53,8 +52,8 @@ const products: Product[] = [
     alt: "Personalised Mother's Day heart-shaped chocolate box filled with pink-dipped strawberries and gold butterfly decorations",
   },
   {
-    name: 'Handcrafted Chocolate Dipped Strawberries',
-    price: 'from £18.99',
+    name: 'Decorated Strawberries Box of 12 with Mini Spoons',
+    price: '£22',
     badge: null,
     badgeBg: '',
     gradientFrom: '#C9918A',
@@ -65,7 +64,7 @@ const products: Product[] = [
   },
   {
     name: 'Blue Chocolate Treat Box',
-    price: '£39.99',
+    price: 'DM for price',
     badge: 'New',
     badgeBg: 'bg-rose-gold',
     gradientFrom: '#8D6F57',
@@ -76,7 +75,7 @@ const products: Product[] = [
   },
   {
     name: "'I Love You' Heart Chocolate Box",
-    price: '£32.99',
+    price: '£45',
     badge: null,
     badgeBg: '',
     gradientFrom: '#2C1F1A',
@@ -202,13 +201,13 @@ export default function Products() {
                   )}
                   <div className="absolute inset-0 bg-espresso/85 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center z-20">
                     <a
-                      href={INSTAGRAM_URL}
+                      href={getOrderDmUrl(product.name)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 bg-white text-espresso px-6 py-3 rounded-full text-xs font-bold tracking-wider transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 hover:bg-champagne uppercase"
                     >
                       <ShoppingBag size={15} />
-                      Message to Order
+                      DM Us to Order
                     </a>
                   </div>
                   <div className="absolute -bottom-6 -right-6 w-28 h-28 rounded-full opacity-10 z-[2]" style={{ background: product.deco }} />
@@ -265,13 +264,11 @@ export default function Products() {
 
         <div className="text-center mt-8">
           <a
-            href={INSTAGRAM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#shop"
             className="inline-flex items-center gap-2.5 px-10 py-4 border-2 border-espresso text-espresso rounded-full text-sm font-semibold tracking-wider hover:bg-espresso hover:text-white transition-all duration-300"
           >
-            View Full Collection
-            <span>&rarr;</span>
+            Browse All Categories
+            <span>&uarr;</span>
           </a>
         </div>
       </div>

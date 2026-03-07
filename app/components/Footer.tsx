@@ -1,18 +1,17 @@
-import { Facebook, Instagram, Mail, Phone, MapPin, Clock } from 'lucide-react';
+import { Facebook, Instagram } from 'lucide-react';
+import { INSTAGRAM_PROFILE_URL } from '@/lib/constants';
+import { categories } from '@/lib/products';
 
-const shopLinks = [
-  { label: 'All Products', href: '#products' },
-  { label: 'Browse Categories', href: '#shop' },
-];
+const shopLinks = categories.map((c) => ({ label: c.title, href: `/${c.slug}` }));
 
 const companyLinks = [
-  { label: 'About Us', href: '#about' },
-  { label: 'How It Works', href: '#how-it-works' },
+  { label: 'About Us', href: '/#about' },
+  { label: 'How It Works', href: '/#how-it-works' },
 ];
 
 const socialLinks = [
   { icon: Facebook, label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=100063608019230' },
-  { icon: Instagram, label: 'Instagram', href: 'https://www.instagram.com/personalize_it_glasgow_/' },
+  { icon: Instagram, label: 'Instagram', href: INSTAGRAM_PROFILE_URL },
 ];
 
 export default function Footer() {
@@ -24,8 +23,8 @@ export default function Footer() {
       <div className="h-px bg-gradient-to-r from-transparent via-rose-gold/30 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
-          <div className="lg:col-span-1">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-8">
+          <div>
             <div className="mb-5">
               <h3 className="font-serif text-xl font-semibold text-white mb-0.5">
                 The Chocolate Affair
@@ -91,43 +90,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div id="contact">
-            <h4 className="text-white text-xs font-bold mb-5 uppercase tracking-[0.18em]">
-              Get in Touch
-            </h4>
-            <ul className="space-y-4">
-              <li className="flex items-start gap-3">
-                <MapPin size={14} className="text-rose-gold mt-0.5 flex-shrink-0" />
-                <span className="text-xs text-white/40 leading-relaxed">
-                  123 Buchanan Street
-                  <br />
-                  Glasgow G1 2JA
-                </span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Phone size={14} className="text-rose-gold flex-shrink-0" />
-                <a
-                  href="tel:01412345678"
-                  className="text-xs text-white/40 hover:text-rose-gold transition-colors"
-                >
-                  0141 234 5678
-                </a>
-              </li>
-              <li className="flex items-center gap-3">
-                <Mail size={14} className="text-rose-gold flex-shrink-0" />
-                <a
-                  href="mailto:hello@thechocolateaffair.uk"
-                  className="text-xs text-white/40 hover:text-rose-gold transition-colors"
-                >
-                  hello@thechocolateaffair.uk
-                </a>
-              </li>
-              <li className="flex items-start gap-3">
-                <Clock size={14} className="text-rose-gold mt-0.5 flex-shrink-0" />
-                <span className="text-xs text-white/40">Mon–Sat, 9am–6pm</span>
-              </li>
-            </ul>
-          </div>
         </div>
       </div>
 

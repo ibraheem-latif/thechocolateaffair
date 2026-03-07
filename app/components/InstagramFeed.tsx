@@ -1,8 +1,9 @@
 import Image from 'next/image';
 import { Instagram, Play, Images, type LucideIcon } from 'lucide-react';
 
+import { INSTAGRAM_PROFILE_URL } from '@/lib/constants';
+
 const FEED_ID = '5dvoGGIApAZPS5r7rKBr';
-const INSTAGRAM_URL = 'https://www.instagram.com/personalize_it_glasgow_/';
 const INSTAGRAM_GRADIENT = 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)';
 
 interface BeholdSize {
@@ -116,7 +117,7 @@ export default async function InstagramFeed() {
           </div>
 
           <a
-            href={INSTAGRAM_URL}
+            href={INSTAGRAM_PROFILE_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full text-sm font-semibold tracking-wide text-white transition-all duration-300 hover:opacity-90 hover:-translate-y-0.5 hover:shadow-lg self-start sm:self-auto flex-shrink-0"

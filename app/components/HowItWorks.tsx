@@ -1,4 +1,5 @@
 import { Package, Sparkles, Truck } from 'lucide-react';
+import { INSTAGRAM_DM_URL } from '@/lib/constants';
 
 const steps = [
   {
@@ -13,7 +14,7 @@ const steps = [
     icon: Sparkles,
     title: 'Make It Personal',
     description:
-      "Add a custom message, photo, or bespoke design — we'll help bring your vision to life.",
+      "Send us a DM on Instagram with your custom message, photo, or design idea \u2014 we'll bring your vision to life.",
   },
   {
     step: 3,
@@ -74,7 +75,9 @@ export default function HowItWorks() {
 
         <div className="text-center mt-16">
           <a
-            href="#shop"
+            href={INSTAGRAM_DM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-3 px-10 py-4 bg-rose-gold hover:bg-rose-gold-light text-white rounded-full text-sm font-semibold tracking-wider transition-all duration-300 hover:shadow-xl hover:shadow-rose-gold/25 hover:-translate-y-0.5"
           >
             Start Creating
