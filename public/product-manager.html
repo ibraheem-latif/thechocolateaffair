@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Chocolate Affair — Product Manager</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
@@ -239,32 +240,87 @@
     justify-content: flex-end;
   }
 
-  /* Photo status */
-  .photo-row {
+  /* Image upload */
+  .image-upload-area {
+    margin-top: 0.75rem;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    margin-top: 0.75rem;
-    font-size: 0.8rem;
+    gap: 1rem;
+    flex-wrap: wrap;
   }
-  .photo-row label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--mocha); }
-  .photo-status {
-    display: flex;
+  .upload-btn {
+    display: inline-flex;
+    align-items: center;
     gap: 0.4rem;
-  }
-  .photo-status button {
-    padding: 0.3rem 0.7rem;
-    border-radius: 5px;
-    font-size: 0.7rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
     font-weight: 600;
-    border: 1px solid var(--sand);
+    border: 1px dashed var(--rose-gold);
     cursor: pointer;
-    background: var(--white);
-    color: var(--mocha);
+    background: var(--champagne);
+    color: var(--espresso);
+    font-family: 'Inter', sans-serif;
     transition: all 0.15s;
   }
-  .photo-status button.active-yes { background: var(--success-light); border-color: var(--success); color: var(--success); }
-  .photo-status button.active-need { background: #fef9e7; border-color: #f39c12; color: #e67e22; }
+  .upload-btn:hover { background: var(--shell); }
+  .upload-btn input[type="file"] {
+    display: none;
+  }
+  .image-preview {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid var(--sand);
+    flex-shrink: 0;
+  }
+  .image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .image-preview .remove-img {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--danger);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+  .image-info {
+    font-size: 0.7rem;
+    color: var(--mocha);
+  }
+  .image-info .filename { font-weight: 600; color: var(--espresso); }
+  .image-info .filesize { color: var(--rose-gold); }
+  .has-photo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--success);
+    background: var(--success-light);
+    padding: 0.25rem 0.6rem;
+    border-radius: 5px;
+    border: 1px solid var(--success);
+  }
+  .existing-photo-note {
+    font-size: 0.7rem;
+    color: var(--mocha);
+    font-style: italic;
+  }
 
   /* Buttons */
   .btn {
@@ -389,6 +445,55 @@
     justify-content: center;
     flex-wrap: wrap;
   }
+  .export-note {
+    width: 100%;
+    font-size: 0.8rem;
+    color: var(--mocha);
+    margin-top: 0.5rem;
+  }
+
+  /* Progress bar */
+  .progress-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(44,31,26,0.7);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+  }
+  .progress-overlay.show { display: flex; }
+  .progress-box {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem 3rem;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .progress-box h3 {
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 1rem;
+    color: var(--espresso);
+  }
+  .progress-bar {
+    width: 250px;
+    height: 8px;
+    background: var(--sand);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--rose-gold);
+    border-radius: 4px;
+    transition: width 0.3s;
+    width: 0%;
+  }
+  .progress-text {
+    font-size: 0.8rem;
+    color: var(--mocha);
+  }
 
   /* Toast */
   .toast {
@@ -421,7 +526,7 @@
 <div class="header">
   <p>Product Manager</p>
   <h1>The Chocolate Affair</h1>
-  <p class="subtitle">Fill in your products below, then click "Download" at the bottom to send the file to Ibby.</p>
+  <p class="subtitle">Fill in your products below, upload photos, then click "Download" at the bottom to send everything to Ibby.</p>
 </div>
 
 <div class="container">
@@ -430,10 +535,11 @@
     <strong>How to use this:</strong><br>
     1. Check each category — edit the name or description if needed<br>
     2. Check each product — edit the name, price, or badge<br>
-    3. Click <strong>"+ Add Product"</strong> to add new products<br>
-    4. Click <strong>"Remove"</strong> on products you want to take off the site<br>
-    5. Choose your <strong>6 Featured Products</strong> for the homepage<br>
-    6. Click <strong>"Download"</strong> at the bottom and send the file to Ibby
+    3. <strong>Upload photos</strong> — tap "Upload Photo" on each product to add an image (use the best quality you have)<br>
+    4. Click <strong>"+ Add Product"</strong> to add new products<br>
+    5. Click <strong>"Remove"</strong> on products you want to take off the site<br>
+    6. Choose your <strong>6 Featured Products</strong> for the homepage<br>
+    7. Click <strong>"Download Everything"</strong> at the bottom — this creates a ZIP with the product list + all your photos. Send it to Ibby!
   </div>
 
   <div id="categories-container"></div>
@@ -449,14 +555,27 @@
 
   <!-- Export -->
   <div class="export-section">
-    <button class="btn btn-primary" onclick="downloadJSON()">Download Product List</button>
-    <button class="btn btn-secondary" onclick="copyToClipboard()">Copy to Clipboard</button>
+    <button class="btn btn-primary" onclick="downloadZip()">Download Everything (ZIP)</button>
+    <button class="btn btn-secondary" onclick="copyToClipboard()">Copy Product List</button>
+    <p class="export-note">The ZIP file contains your product list + all uploaded photos at full resolution.</p>
+  </div>
+</div>
+
+<!-- Progress overlay -->
+<div class="progress-overlay" id="progress-overlay">
+  <div class="progress-box">
+    <h3>Preparing your download...</h3>
+    <div class="progress-bar"><div class="progress-bar-fill" id="progress-fill"></div></div>
+    <p class="progress-text" id="progress-text">Packaging products...</p>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
+// Store uploaded image files: key = "ci-pi", value = File object
+const uploadedImages = {};
+
 // Current product data from the website
 const DATA = {
   categories: [
@@ -466,13 +585,13 @@ const DATA = {
       subtitle: 'Heart boxes · Square box · Football box',
       description: 'Our signature personalised chocolate boxes — handcrafted with Belgian chocolate, fresh strawberries, and your custom message. Perfect for birthdays, anniversaries, and every celebration.',
       products: [
-        { name: 'Birthday Pink Heart Chocolate Box', price: '£50', badge: 'Best Seller', hasPhoto: true },
-        { name: "Mother's Day Heart Chocolate Box", price: '£50', badge: 'Popular', hasPhoto: true },
-        { name: "'I Love You' Heart Chocolate Box", price: '£45', badge: '', hasPhoto: true },
-        { name: 'Happy Birthday Mum Heart Box', price: '£35', badge: '', hasPhoto: true },
-        { name: '30th Birthday Heart Chocolate Box', price: '£50', badge: '', hasPhoto: true },
-        { name: 'Ramadan Mubarak Heart Box', price: '£35', badge: '', hasPhoto: true },
-        { name: 'Ramadan Mubarak Milk Chocolate Heart Box', price: '£35', badge: '', hasPhoto: true },
+        { name: 'Birthday Pink Heart Chocolate Box', price: '£50', badge: 'Best Seller', hasPhoto: true, existingPhoto: true },
+        { name: "Mother's Day Heart Chocolate Box", price: '£50', badge: 'Popular', hasPhoto: true, existingPhoto: true },
+        { name: "'I Love You' Heart Chocolate Box", price: '£45', badge: '', hasPhoto: true, existingPhoto: true },
+        { name: 'Happy Birthday Mum Heart Box', price: '£35', badge: '', hasPhoto: true, existingPhoto: true },
+        { name: '30th Birthday Heart Chocolate Box', price: '£50', badge: '', hasPhoto: true, existingPhoto: true },
+        { name: 'Ramadan Mubarak Heart Box', price: '£35', badge: '', hasPhoto: true, existingPhoto: true },
+        { name: 'Ramadan Mubarak Milk Chocolate Heart Box', price: '£35', badge: '', hasPhoto: true, existingPhoto: true },
       ]
     },
     {
@@ -481,8 +600,8 @@ const DATA = {
       subtitle: 'Cakes · Cakesicles · Teacup cupcakes',
       description: 'Bespoke celebration cakes and sweet treats — from show-stopping birthday cakes to elegant cakesicles, each one designed and decorated to your vision.',
       products: [
-        { name: '21st Birthday White Chocolate Heart Cake', price: 'DM for price', badge: 'Bespoke', hasPhoto: true },
-        { name: 'Bride To Be Chocolate Cakesicle', price: 'DM for price', badge: '', hasPhoto: true },
+        { name: '21st Birthday White Chocolate Heart Cake', price: 'DM for price', badge: 'Bespoke', hasPhoto: true, existingPhoto: true },
+        { name: 'Bride To Be Chocolate Cakesicle', price: 'DM for price', badge: '', hasPhoto: true, existingPhoto: true },
       ]
     },
     {
@@ -491,12 +610,12 @@ const DATA = {
       subtitle: 'Mix treat box · Candy box · Gift baskets',
       description: 'Luxury mixed treat boxes and gift baskets packed with chocolate-dipped strawberries, dates, and handcrafted confections — the ultimate gifting experience.',
       products: [
-        { name: 'Luxury Mixed Treat Box', price: 'DM for price', badge: 'Premium', hasPhoto: true },
-        { name: 'Blue Chocolate Treat Box', price: 'DM for price', badge: 'New', hasPhoto: true },
-        { name: 'Assorted Chocolate Covered Dates Gift Box', price: 'DM for price', badge: '', hasPhoto: true },
-        { name: 'Baby Shark Themed Strawberry Box', price: 'DM for price', badge: 'Kids', hasPhoto: true },
-        { name: 'Personalised Blue Chocolate Strawberry Basket', price: 'DM for price', badge: '', hasPhoto: true },
-        { name: "'Love You Baby' White Chocolate Strawberry Basket", price: 'DM for price', badge: '', hasPhoto: true },
+        { name: 'Luxury Mixed Treat Box', price: 'DM for price', badge: 'Premium', hasPhoto: true, existingPhoto: true },
+        { name: 'Blue Chocolate Treat Box', price: 'DM for price', badge: 'New', hasPhoto: true, existingPhoto: true },
+        { name: 'Assorted Chocolate Covered Dates Gift Box', price: 'DM for price', badge: '', hasPhoto: true, existingPhoto: true },
+        { name: 'Baby Shark Themed Strawberry Box', price: 'DM for price', badge: 'Kids', hasPhoto: true, existingPhoto: true },
+        { name: 'Personalised Blue Chocolate Strawberry Basket', price: 'DM for price', badge: '', hasPhoto: true, existingPhoto: true },
+        { name: "'Love You Baby' White Chocolate Strawberry Basket", price: 'DM for price', badge: '', hasPhoto: true, existingPhoto: true },
       ]
     },
     {
@@ -505,8 +624,8 @@ const DATA = {
       subtitle: 'Truffles · Fudge · Strawberries · Fruit platters',
       description: 'Individual sweet treats and platters — from hand-dipped chocolate strawberries to luxury fresh fruit platters, perfect for any gathering or as a standalone gift.',
       products: [
-        { name: 'Decorated Strawberries Box of 12 with Mini Spoons', price: '£22', badge: 'Popular', hasPhoto: true },
-        { name: 'Luxury Fresh Fruit Platter', price: 'DM for price', badge: '', hasPhoto: true },
+        { name: 'Decorated Strawberries Box of 12 with Mini Spoons', price: '£22', badge: 'Popular', hasPhoto: true, existingPhoto: true },
+        { name: 'Luxury Fresh Fruit Platter', price: 'DM for price', badge: '', hasPhoto: true, existingPhoto: true },
       ]
     },
     {
@@ -515,7 +634,7 @@ const DATA = {
       subtitle: 'Smash pinata · Themed creations · Baby items',
       description: 'Creative themed chocolate gifts for special occasions — from Ramadan and Eid to baby showers and themed parties. Unique designs that make every celebration memorable.',
       products: [
-        { name: 'Fillable Crescent Moon Gift Box with Flowers', price: '£35', badge: 'Seasonal', hasPhoto: true },
+        { name: 'Fillable Crescent Moon Gift Box with Flowers', price: '£35', badge: 'Seasonal', hasPhoto: true, existingPhoto: true },
       ]
     },
   ],
@@ -585,8 +704,49 @@ function renderProducts(ci) {
   const cat = state.categories[ci];
 
   cat.products.forEach((prod, pi) => {
+    const key = ci + '-' + pi;
+    const hasUpload = !!uploadedImages[key];
     const card = document.createElement('div');
     card.className = `product-card${prod._removed ? ' marked-remove' : ''}${prod._new ? ' new-product' : ''}`;
+
+    let imageHtml = '';
+    if (hasUpload) {
+      const file = uploadedImages[key];
+      const previewUrl = URL.createObjectURL(file);
+      imageHtml = `
+        <div class="image-upload-area">
+          <div class="image-preview">
+            <img src="${previewUrl}" alt="Preview">
+            <button class="remove-img" onclick="removeImage(${ci},${pi})" title="Remove photo">×</button>
+          </div>
+          <div class="image-info">
+            <div class="filename">${escHtml(file.name)}</div>
+            <div class="filesize">${formatSize(file.size)}</div>
+            <span class="has-photo-badge">Uploaded ✓</span>
+          </div>
+        </div>
+      `;
+    } else if (prod.existingPhoto) {
+      imageHtml = `
+        <div class="image-upload-area">
+          <label class="upload-btn">
+            📷 Replace Photo
+            <input type="file" accept="image/*" onchange="handleImageUpload(${ci},${pi},this)">
+          </label>
+          <span class="existing-photo-note">Already on website — only upload if you want to replace it</span>
+        </div>
+      `;
+    } else {
+      imageHtml = `
+        <div class="image-upload-area">
+          <label class="upload-btn">
+            📷 Upload Photo
+            <input type="file" accept="image/*" onchange="handleImageUpload(${ci},${pi},this)">
+          </label>
+        </div>
+      `;
+    }
+
     card.innerHTML = `
       <span class="product-number">${prod._new ? 'NEW' : pi + 1}</span>
       <div class="product-fields">
@@ -605,14 +765,8 @@ function renderProducts(ci) {
           </select>
         </div>
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;">
-        <div class="photo-row">
-          <label>Photo:</label>
-          <div class="photo-status">
-            <button class="${prod.hasPhoto ? 'active-yes' : ''}" onclick="setPhoto(${ci},${pi},true)">Have it ✓</button>
-            <button class="${!prod.hasPhoto ? 'active-need' : ''}" onclick="setPhoto(${ci},${pi},false)">Need photo</button>
-          </div>
-        </div>
+      ${prod._removed ? '' : imageHtml}
+      <div style="display:flex;justify-content:flex-end;align-items:center;flex-wrap:wrap;">
         <div class="product-actions">
           ${prod._removed
             ? `<button class="btn btn-undo" onclick="undoRemove(${ci},${pi})">Undo Remove</button>`
@@ -625,6 +779,30 @@ function renderProducts(ci) {
   });
 }
 
+function handleImageUpload(ci, pi, input) {
+  const file = input.files[0];
+  if (!file) return;
+  const key = ci + '-' + pi;
+  uploadedImages[key] = file;
+  state.categories[ci].products[pi].hasPhoto = true;
+  renderProducts(ci);
+  showToast('Photo added!');
+}
+
+function removeImage(ci, pi) {
+  const key = ci + '-' + pi;
+  delete uploadedImages[key];
+  const prod = state.categories[ci].products[pi];
+  if (!prod.existingPhoto) prod.hasPhoto = false;
+  renderProducts(ci);
+}
+
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
 function toggleCategory(header) {
   header.parentElement.classList.toggle('collapsed');
 }
@@ -635,11 +813,11 @@ function addProduct(ci) {
     price: '',
     badge: '',
     hasPhoto: false,
+    existingPhoto: false,
     _new: true
   });
   renderProducts(ci);
   updateCounts();
-  // scroll to the new product
   const container = document.getElementById(`products-${ci}`);
   const lastCard = container.lastElementChild;
   if (lastCard) {
@@ -658,11 +836,6 @@ function undoRemove(ci, pi) {
   state.categories[ci].products[pi]._removed = false;
   renderProducts(ci);
   updateCounts();
-}
-
-function setPhoto(ci, pi, has) {
-  state.categories[ci].products[pi].hasPhoto = has;
-  renderProducts(ci);
 }
 
 function updateCounts() {
@@ -705,41 +878,113 @@ function renderFeatured() {
 }
 
 function getExportData() {
-  const output = {
+  return {
     lastEdited: new Date().toISOString(),
-    categories: state.categories.map(cat => ({
+    categories: state.categories.map((cat, ci) => ({
       title: cat.title,
       subtitle: cat.subtitle,
       description: cat.description,
       products: cat.products
         .filter(p => !p._removed)
         .filter(p => p.name.trim())
-        .map(p => ({
-          name: p.name,
-          price: p.price,
-          badge: p.badge || null,
-          hasPhoto: p.hasPhoto,
-          isNew: !!p._new,
-        })),
+        .map((p, pi) => {
+          const origIndex = state.categories[ci].products.indexOf(p);
+          const key = ci + '-' + origIndex;
+          const uploaded = uploadedImages[key];
+          return {
+            name: p.name,
+            price: p.price,
+            badge: p.badge || null,
+            hasExistingPhoto: !!p.existingPhoto,
+            hasNewPhoto: !!uploaded,
+            newPhotoFilename: uploaded ? sanitizeFilename(cat.title, p.name, uploaded.name) : null,
+            isNew: !!p._new,
+          };
+        }),
       removedProducts: cat.products
         .filter(p => p._removed && !p._new)
         .map(p => p.name),
     })),
     featured: state.featured.filter(f => f),
   };
-  return output;
 }
 
-function downloadJSON() {
-  const data = getExportData();
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'chocolate-affair-products.json';
-  a.click();
-  URL.revokeObjectURL(url);
-  showToast('Downloaded! Send this file to Ibby');
+function sanitizeFilename(category, productName, originalName) {
+  const ext = originalName.split('.').pop().toLowerCase();
+  const slug = productName
+    .toLowerCase()
+    .replace(/['']/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  const catSlug = category
+    .toLowerCase()
+    .replace(/[&]/g, 'and')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  return `${catSlug}/${slug}.${ext}`;
+}
+
+async function downloadZip() {
+  const overlay = document.getElementById('progress-overlay');
+  const fill = document.getElementById('progress-fill');
+  const text = document.getElementById('progress-text');
+  overlay.classList.add('show');
+
+  try {
+    const zip = new JSZip();
+    const data = getExportData();
+
+    // Add JSON
+    fill.style.width = '10%';
+    text.textContent = 'Saving product list...';
+    zip.file('products.json', JSON.stringify(data, null, 2));
+
+    // Add images
+    const imageKeys = Object.keys(uploadedImages);
+    const total = imageKeys.length;
+
+    for (let i = 0; i < total; i++) {
+      const key = imageKeys[i];
+      const file = uploadedImages[key];
+      const [ci, pi] = key.split('-').map(Number);
+      const prod = state.categories[ci].products[pi];
+      const cat = state.categories[ci];
+      const filename = sanitizeFilename(cat.title, prod.name, file.name);
+
+      text.textContent = `Adding photo ${i + 1} of ${total}...`;
+      fill.style.width = (10 + (80 * (i + 1) / total)) + '%';
+
+      const arrayBuffer = await file.arrayBuffer();
+      zip.file('photos/' + filename, arrayBuffer);
+    }
+
+    // Generate ZIP
+    fill.style.width = '95%';
+    text.textContent = 'Creating ZIP file...';
+
+    const blob = await zip.generateAsync({ type: 'blob' });
+
+    fill.style.width = '100%';
+    text.textContent = 'Done!';
+
+    // Download
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'chocolate-affair-products.zip';
+    a.click();
+    URL.revokeObjectURL(url);
+
+    setTimeout(() => {
+      overlay.classList.remove('show');
+      showToast('Downloaded! Send the ZIP file to Ibby');
+    }, 500);
+
+  } catch (err) {
+    overlay.classList.remove('show');
+    console.error(err);
+    showToast('Error creating download — try "Copy Product List" instead');
+  }
 }
 
 function copyToClipboard() {
@@ -748,7 +993,6 @@ function copyToClipboard() {
   navigator.clipboard.writeText(text).then(() => {
     showToast('Copied! Paste it in a message to Ibby');
   }).catch(() => {
-    // Fallback
     const ta = document.createElement('textarea');
     ta.value = text;
     document.body.appendChild(ta);
