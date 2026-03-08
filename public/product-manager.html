@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>The Chocolate Affair — Product Manager</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
@@ -24,6 +24,8 @@
     --danger-light: #fdf0ef;
     --success: #27ae60;
     --success-light: #eafaf1;
+    --warning: #f39c12;
+    --warning-light: #fef9e7;
   }
 
   body {
@@ -32,32 +34,33 @@
     color: var(--espresso);
     line-height: 1.6;
     min-height: 100vh;
+    -webkit-text-size-adjust: 100%;
   }
 
   /* Header */
   .header {
     background: linear-gradient(155deg, #0f0a08 0%, #1a1109 20%, #2C1F1A 50%, #3d2b24 75%, #5E4A3C 100%);
-    padding: 2.5rem 1.5rem;
+    padding: 2rem 1rem;
     text-align: center;
     color: white;
   }
   .header h1 {
     font-family: 'Playfair Display', serif;
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 0.25rem;
   }
   .header p {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--rose-gold);
     font-weight: 600;
   }
   .header .subtitle {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: rgba(255,255,255,0.5);
-    margin-top: 0.75rem;
+    margin-top: 0.5rem;
     letter-spacing: 0;
     text-transform: none;
     font-weight: 400;
@@ -67,149 +70,85 @@
   }
 
   /* Layout */
-  .container { max-width: 900px; margin: 0 auto; padding: 1.5rem; }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
 
-  /* Instructions banner */
+  /* Instructions */
   .instructions {
     background: var(--white);
     border: 1px solid var(--sand);
     border-left: 4px solid var(--rose-gold);
     border-radius: 8px;
-    padding: 1.25rem 1.5rem;
-    margin-bottom: 2rem;
-    font-size: 0.85rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.8rem;
     color: var(--mocha);
     line-height: 1.7;
   }
   .instructions strong { color: var(--espresso); }
+  .instructions .collapse-toggle {
+    display: block;
+    margin-top: 0.5rem;
+    color: var(--rose-gold);
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.75rem;
+  }
+  .instructions .details { display: none; margin-top: 0.5rem; }
+  .instructions.expanded .details { display: block; }
 
   /* Category sections */
   .category-section {
     background: var(--white);
     border: 1px solid var(--sand);
     border-radius: 12px;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     overflow: hidden;
   }
   .category-header {
     background: linear-gradient(135deg, var(--espresso), var(--mocha));
     color: white;
-    padding: 1.25rem 1.5rem;
+    padding: 1rem;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
     user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    min-height: 56px;
   }
-  .category-header:hover { opacity: 0.95; }
   .category-header h2 {
     font-family: 'Playfair Display', serif;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 600;
+  }
+  .category-header .meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
   }
   .category-header .count {
     background: rgba(255,255,255,0.15);
-    padding: 0.25rem 0.75rem;
+    padding: 0.2rem 0.6rem;
     border-radius: 20px;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 600;
   }
   .category-header .arrow {
-    font-size: 1.25rem;
+    font-size: 1rem;
     transition: transform 0.2s;
-    margin-left: 1rem;
   }
   .category-section.collapsed .arrow { transform: rotate(-90deg); }
-  .category-body { padding: 1.5rem; }
+  .category-body { padding: 1rem; }
   .category-section.collapsed .category-body { display: none; }
 
-  /* Description editing */
-  .desc-block { margin-bottom: 1.5rem; }
-  .desc-block label {
-    display: block;
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--mocha);
-    margin-bottom: 0.5rem;
-  }
-  .desc-block textarea {
-    width: 100%;
-    border: 1px solid var(--sand);
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.85rem;
-    color: var(--espresso);
-    resize: vertical;
-    min-height: 60px;
-    transition: border-color 0.2s;
-    background: var(--cream);
-  }
-  .desc-block textarea:focus {
-    outline: none;
-    border-color: var(--rose-gold);
-    background: var(--white);
-  }
-  .desc-block input[type="text"] {
-    width: 100%;
-    border: 1px solid var(--sand);
-    border-radius: 8px;
-    padding: 0.6rem 1rem;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.85rem;
-    color: var(--espresso);
-    background: var(--cream);
-  }
-  .desc-block input[type="text"]:focus {
-    outline: none;
-    border-color: var(--rose-gold);
-    background: var(--white);
-  }
-
-  /* Product cards */
-  .product-card {
-    border: 1px solid var(--sand);
-    border-radius: 10px;
-    padding: 1.25rem;
-    margin-bottom: 0.75rem;
-    background: var(--cream);
-    position: relative;
-    transition: box-shadow 0.2s;
-  }
-  .product-card:hover { box-shadow: 0 2px 12px rgba(44,31,26,0.08); }
-  .product-card.marked-remove {
-    border-color: var(--danger);
-    background: var(--danger-light);
-    opacity: 0.6;
-  }
-  .product-card .product-number {
-    position: absolute;
-    top: -0.5rem;
-    left: 1rem;
-    background: var(--espresso);
-    color: white;
-    font-size: 0.65rem;
-    font-weight: 700;
-    padding: 0.15rem 0.6rem;
-    border-radius: 10px;
-  }
-  .product-card.new-product .product-number {
-    background: var(--success);
-  }
-
-  .product-fields {
-    display: grid;
-    grid-template-columns: 1fr 120px 140px;
-    gap: 0.75rem;
-    align-items: end;
-  }
-  @media (max-width: 600px) {
-    .product-fields { grid-template-columns: 1fr; }
-  }
-
-  .field label {
+  /* Form fields */
+  .desc-block { margin-bottom: 1rem; }
+  .field-label {
     display: block;
     font-size: 0.65rem;
     font-weight: 700;
@@ -218,114 +157,243 @@
     color: var(--mocha);
     margin-bottom: 0.3rem;
   }
-  .field input, .field select {
+  .field-hint {
+    font-size: 0.65rem;
+    color: var(--rose-gold);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  textarea, input[type="text"] {
     width: 100%;
     border: 1px solid var(--sand);
-    border-radius: 6px;
-    padding: 0.55rem 0.75rem;
+    border-radius: 8px;
+    padding: 0.65rem 0.75rem;
     font-family: 'Inter', sans-serif;
-    font-size: 0.85rem;
+    font-size: 16px; /* prevents iOS zoom */
     color: var(--espresso);
-    background: var(--white);
+    background: var(--cream);
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
   }
-  .field input:focus, .field select:focus {
+  textarea:focus, input[type="text"]:focus, select:focus {
     outline: none;
     border-color: var(--rose-gold);
+    background: var(--white);
+  }
+  textarea { resize: vertical; min-height: 50px; }
+  select {
+    width: 100%;
+    border: 1px solid var(--sand);
+    border-radius: 8px;
+    padding: 0.65rem 0.75rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    color: var(--espresso);
+    background: var(--white);
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 5l3 3 3-3' fill='none' stroke='%239B8574' stroke-width='1.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    padding-right: 2rem;
   }
 
-  .product-actions {
+  /* Product cards */
+  .product-card {
+    border: 1px solid var(--sand);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: var(--cream);
+    position: relative;
+  }
+  .product-card.marked-remove {
+    border-color: var(--danger);
+    background: var(--danger-light);
+    opacity: 0.6;
+  }
+  .product-card .product-number {
+    position: absolute;
+    top: -0.4rem;
+    left: 0.75rem;
+    background: var(--espresso);
+    color: white;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 0.1rem 0.5rem;
+    border-radius: 10px;
+  }
+  .product-card.new-product .product-number { background: var(--success); }
+
+  /* Product name + price + badge row */
+  .product-top {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+    margin-bottom: 0.75rem;
+  }
+  .product-top-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.65rem;
+  }
+
+  /* Expandable sections inside product card */
+  .product-section {
+    border-top: 1px solid var(--sand);
+    padding-top: 0.75rem;
+    margin-top: 0.75rem;
+  }
+  .section-toggle {
     display: flex;
-    gap: 0.5rem;
-    margin-top: 0.75rem;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    padding: 0.25rem 0;
   }
+  .section-toggle .field-label { margin-bottom: 0; cursor: pointer; }
+  .section-toggle .toggle-arrow {
+    font-size: 0.8rem;
+    color: var(--mocha);
+    transition: transform 0.2s;
+  }
+  .section-content { display: none; padding-top: 0.5rem; }
+  .product-section.open .section-content { display: block; }
+  .product-section.open .toggle-arrow { transform: rotate(90deg); }
 
-  /* Image upload */
-  .image-upload-area {
-    margin-top: 0.75rem;
+  /* Variants */
+  .variant-row {
+    display: grid;
+    grid-template-columns: 1fr 100px 36px;
+    gap: 0.5rem;
+    align-items: end;
+    margin-bottom: 0.5rem;
+  }
+  .variant-row input { font-size: 14px; padding: 0.5rem 0.6rem; }
+  .variant-remove {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid var(--sand);
+    background: var(--white);
+    color: var(--danger);
+    cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
+    justify-content: center;
+    font-size: 1.1rem;
+    transition: all 0.15s;
   }
-  .upload-btn {
+  .variant-remove:hover { background: var(--danger-light); border-color: var(--danger); }
+  .btn-add-sm {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    font-size: 0.75rem;
+    gap: 0.3rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.7rem;
     font-weight: 600;
     border: 1px dashed var(--rose-gold);
     cursor: pointer;
     background: var(--champagne);
     color: var(--espresso);
     font-family: 'Inter', sans-serif;
-    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
   }
-  .upload-btn:hover { background: var(--shell); }
-  .upload-btn input[type="file"] {
-    display: none;
+
+  /* Multi-image gallery */
+  .image-gallery {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
   }
-  .image-preview {
+  .image-thumb {
     position: relative;
-    width: 80px;
-    height: 80px;
+    width: 72px;
+    height: 72px;
     border-radius: 8px;
     overflow: hidden;
     border: 2px solid var(--sand);
     flex-shrink: 0;
   }
-  .image-preview img {
+  .image-thumb img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-  .image-preview .remove-img {
+  .image-thumb .remove-img {
     position: absolute;
     top: 2px;
     right: 2px;
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     background: var(--danger);
     color: white;
     border: none;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 11px;
     display: flex;
     align-items: center;
     justify-content: center;
     line-height: 1;
   }
-  .image-info {
-    font-size: 0.7rem;
-    color: var(--mocha);
+  .image-thumb.existing {
+    border-color: var(--success);
   }
-  .image-info .filename { font-weight: 600; color: var(--espresso); }
-  .image-info .filesize { color: var(--rose-gold); }
-  .has-photo-badge {
+  .image-thumb.existing::after {
+    content: '✓';
+    position: absolute;
+    bottom: 2px;
+    left: 2px;
+    background: var(--success);
+    color: white;
+    font-size: 8px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .upload-btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--success);
-    background: var(--success-light);
-    padding: 0.25rem 0.6rem;
-    border-radius: 5px;
-    border: 1px solid var(--success);
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 8px;
+    border: 2px dashed var(--rose-gold);
+    cursor: pointer;
+    background: var(--champagne);
+    color: var(--espresso);
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
   }
-  .existing-photo-note {
-    font-size: 0.7rem;
-    color: var(--mocha);
-    font-style: italic;
+  .upload-btn:hover { background: var(--shell); }
+  .upload-btn input[type="file"] { display: none; }
+
+  /* Product footer */
+  .product-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--sand);
   }
 
   /* Buttons */
   .btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.4rem;
     padding: 0.5rem 1rem;
     border-radius: 8px;
@@ -335,6 +403,7 @@
     cursor: pointer;
     transition: all 0.2s;
     font-family: 'Inter', sans-serif;
+    -webkit-tap-highlight-color: transparent;
   }
   .btn-add {
     background: var(--champagne);
@@ -342,26 +411,29 @@
     border: 1px dashed var(--rose-gold);
     width: 100%;
     justify-content: center;
-    padding: 0.75rem;
+    padding: 0.85rem;
     margin-top: 0.5rem;
+    font-size: 0.8rem;
+    min-height: 48px;
   }
-  .btn-add:hover { background: var(--shell); }
+  .btn-add:hover, .btn-add:active { background: var(--shell); }
   .btn-remove {
     background: transparent;
     color: var(--danger);
     border: 1px solid transparent;
     font-size: 0.7rem;
-    padding: 0.35rem 0.65rem;
+    padding: 0.4rem 0.75rem;
+    min-height: 36px;
   }
-  .btn-remove:hover { background: var(--danger-light); border-color: var(--danger); }
+  .btn-remove:hover, .btn-remove:active { background: var(--danger-light); border-color: var(--danger); }
   .btn-undo {
     background: transparent;
     color: var(--success);
     border: 1px solid var(--success);
     font-size: 0.7rem;
-    padding: 0.35rem 0.65rem;
+    padding: 0.4rem 0.75rem;
+    min-height: 36px;
   }
-
   .btn-primary {
     background: var(--rose-gold);
     color: white;
@@ -369,44 +441,46 @@
     font-size: 0.9rem;
     border-radius: 50px;
     letter-spacing: 0.05em;
+    min-height: 52px;
+    width: 100%;
   }
-  .btn-primary:hover { background: var(--rose-gold-light); transform: translateY(-1px); box-shadow: 0 4px 15px rgba(201,145,138,0.3); }
+  .btn-primary:hover, .btn-primary:active { background: var(--rose-gold-light); }
   .btn-secondary {
     background: var(--white);
     color: var(--espresso);
     border: 2px solid var(--espresso);
-    padding: 1rem 2rem;
-    font-size: 0.9rem;
+    padding: 0.85rem 1.5rem;
+    font-size: 0.85rem;
     border-radius: 50px;
-    letter-spacing: 0.05em;
+    min-height: 52px;
+    width: 100%;
   }
-  .btn-secondary:hover { background: var(--espresso); color: white; }
+  .btn-secondary:hover, .btn-secondary:active { background: var(--espresso); color: white; }
 
-  /* Featured section */
+  /* Featured */
   .featured-section {
     background: var(--white);
     border: 1px solid var(--sand);
     border-radius: 12px;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     overflow: hidden;
   }
   .featured-header {
     background: linear-gradient(135deg, var(--rose-gold), var(--rose-gold-light));
     color: white;
-    padding: 1.25rem 1.5rem;
+    padding: 1rem;
   }
   .featured-header h2 {
     font-family: 'Playfair Display', serif;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
   }
-  .featured-header p { font-size: 0.8rem; opacity: 0.85; margin-top: 0.25rem; }
-  .featured-body { padding: 1.5rem; }
-
+  .featured-header p { font-size: 0.75rem; opacity: 0.85; margin-top: 0.2rem; }
+  .featured-body { padding: 1rem; }
   .featured-pick {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 0.75rem;
+    gap: 0.65rem;
+    padding: 0.6rem;
     border: 1px solid var(--sand);
     border-radius: 8px;
     margin-bottom: 0.5rem;
@@ -415,44 +489,36 @@
   .featured-pick .pick-number {
     background: var(--rose-gold);
     color: white;
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 700;
     flex-shrink: 0;
   }
   .featured-pick select {
     flex: 1;
-    border: 1px solid var(--sand);
-    border-radius: 6px;
-    padding: 0.5rem;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.85rem;
-    color: var(--espresso);
-    background: var(--white);
+    font-size: 14px;
   }
 
-  /* Export area */
+  /* Export */
   .export-section {
-    text-align: center;
-    padding: 2rem 0;
+    padding: 1.5rem 0;
     display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: center;
   }
   .export-note {
-    width: 100%;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--mocha);
-    margin-top: 0.5rem;
+    text-align: center;
   }
 
-  /* Progress bar */
+  /* Progress */
   .progress-overlay {
     display: none;
     position: fixed;
@@ -461,22 +527,26 @@
     z-index: 2000;
     align-items: center;
     justify-content: center;
+    padding: 1rem;
   }
   .progress-overlay.show { display: flex; }
   .progress-box {
     background: white;
     border-radius: 16px;
-    padding: 2rem 3rem;
+    padding: 1.5rem 2rem;
     text-align: center;
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 320px;
   }
   .progress-box h3 {
     font-family: 'Playfair Display', serif;
     margin-bottom: 1rem;
     color: var(--espresso);
+    font-size: 1rem;
   }
   .progress-bar {
-    width: 250px;
+    width: 100%;
     height: 8px;
     background: var(--sand);
     border-radius: 4px;
@@ -490,34 +560,49 @@
     transition: width 0.3s;
     width: 0%;
   }
-  .progress-text {
-    font-size: 0.8rem;
-    color: var(--mocha);
-  }
+  .progress-text { font-size: 0.75rem; color: var(--mocha); }
 
   /* Toast */
   .toast {
     position: fixed;
-    bottom: 2rem;
+    bottom: 1.5rem;
     left: 50%;
     transform: translateX(-50%) translateY(100px);
     background: var(--espresso);
     color: white;
-    padding: 1rem 2rem;
+    padding: 0.85rem 1.5rem;
     border-radius: 50px;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 600;
     z-index: 1000;
     transition: transform 0.3s ease;
     box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    white-space: nowrap;
+    max-width: 90vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
 
-  /* Divider */
   .section-divider {
     height: 1px;
     background: linear-gradient(to right, transparent, var(--sand), transparent);
-    margin: 0.5rem 0 1.5rem;
+    margin: 0.5rem 0 1rem;
+  }
+
+  /* Desktop enhancements */
+  @media (min-width: 640px) {
+    .header { padding: 2.5rem 1.5rem; }
+    .header h1 { font-size: 1.75rem; }
+    .container { padding: 1.5rem; }
+    .category-header { padding: 1.25rem 1.5rem; }
+    .category-header h2 { font-size: 1.25rem; }
+    .category-body { padding: 1.5rem; }
+    .product-top-row { grid-template-columns: 1fr 1fr; }
+    .variant-row { grid-template-columns: 1fr 120px 36px; }
+    .export-section { flex-direction: row; justify-content: center; }
+    .btn-primary, .btn-secondary { width: auto; }
+    .image-thumb, .upload-btn { width: 80px; height: 80px; }
   }
 </style>
 </head>
@@ -526,25 +611,27 @@
 <div class="header">
   <p>Product Manager</p>
   <h1>The Chocolate Affair</h1>
-  <p class="subtitle">Fill in your products below, upload photos, then click "Download" at the bottom to send everything to Ibby.</p>
+  <p class="subtitle">Fill in your products, upload photos, then download everything at the bottom.</p>
 </div>
 
 <div class="container">
 
-  <div class="instructions">
-    <strong>How to use this:</strong><br>
-    1. Check each category — edit the name or description if needed<br>
-    2. Check each product — edit the name, price, or badge<br>
-    3. <strong>Upload photos</strong> — tap "Upload Photo" on each product to add an image (use the best quality you have)<br>
-    4. Click <strong>"+ Add Product"</strong> to add new products<br>
-    5. Click <strong>"Remove"</strong> on products you want to take off the site<br>
-    6. Choose your <strong>6 Featured Products</strong> for the homepage<br>
-    7. Click <strong>"Download Everything"</strong> at the bottom — this creates a ZIP with the product list + all your photos. Send it to Ibby!
+  <div class="instructions" id="instructions" onclick="this.classList.toggle('expanded')">
+    <strong>How to use this</strong> <span class="collapse-toggle">Tap to see instructions</span>
+    <div class="details">
+      1. Check each <strong>category</strong> — edit the name or description if needed<br>
+      2. For each <strong>product</strong> — fill in name, price, badge, description<br>
+      3. Add <strong>size options</strong> if the product comes in different quantities (e.g. Box of 12, Box of 24)<br>
+      4. <strong>Upload photos</strong> — tap + to add images (add as many as you want, best quality!)<br>
+      5. Add <strong>notes</strong> — e.g. "best consumed on day of collection"<br>
+      6. Tap <strong>"+ Add Product"</strong> to add new products<br>
+      7. Pick your <strong>6 Featured Products</strong> for the homepage<br>
+      8. Tap <strong>"Download Everything"</strong> and send the ZIP to Ibby!
+    </div>
   </div>
 
   <div id="categories-container"></div>
 
-  <!-- Featured Products -->
   <div class="featured-section">
     <div class="featured-header">
       <h2>Featured Products</h2>
@@ -553,30 +640,27 @@
     <div class="featured-body" id="featured-body"></div>
   </div>
 
-  <!-- Export -->
   <div class="export-section">
     <button class="btn btn-primary" onclick="downloadZip()">Download Everything (ZIP)</button>
     <button class="btn btn-secondary" onclick="copyToClipboard()">Copy Product List</button>
-    <p class="export-note">The ZIP file contains your product list + all uploaded photos at full resolution.</p>
+    <p class="export-note">The ZIP includes your product list + all uploaded photos at full resolution.</p>
   </div>
 </div>
 
-<!-- Progress overlay -->
 <div class="progress-overlay" id="progress-overlay">
   <div class="progress-box">
-    <h3>Preparing your download...</h3>
+    <h3>Preparing download...</h3>
     <div class="progress-bar"><div class="progress-bar-fill" id="progress-fill"></div></div>
-    <p class="progress-text" id="progress-text">Packaging products...</p>
+    <p class="progress-text" id="progress-text">Packaging...</p>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// Store uploaded image files: key = "ci-pi", value = File object
+// Store uploaded images: key = "ci-pi", value = File[]
 const uploadedImages = {};
 
-// Current product data from the website
 const DATA = {
   categories: [
     {
@@ -585,13 +669,13 @@ const DATA = {
       subtitle: 'Heart boxes · Square box · Football box',
       description: 'Our signature personalised chocolate boxes — handcrafted with Belgian chocolate, fresh strawberries, and your custom message. Perfect for birthdays, anniversaries, and every celebration.',
       products: [
-        { name: 'Birthday Pink Heart Chocolate Box', price: '£50', badge: 'Best Seller', hasPhoto: true, existingPhoto: true },
-        { name: "Mother's Day Heart Chocolate Box", price: '£50', badge: 'Popular', hasPhoto: true, existingPhoto: true },
-        { name: "'I Love You' Heart Chocolate Box", price: '£45', badge: '', hasPhoto: true, existingPhoto: true },
-        { name: 'Happy Birthday Mum Heart Box', price: '£35', badge: '', hasPhoto: true, existingPhoto: true },
-        { name: '30th Birthday Heart Chocolate Box', price: '£50', badge: '', hasPhoto: true, existingPhoto: true },
-        { name: 'Ramadan Mubarak Heart Box', price: '£35', badge: '', hasPhoto: true, existingPhoto: true },
-        { name: 'Ramadan Mubarak Milk Chocolate Heart Box', price: '£35', badge: '', hasPhoto: true, existingPhoto: true },
+        { name: 'Birthday Pink Heart Chocolate Box', price: '£50', badge: 'Best Seller', description: '', variants: [], notes: '', existingPhoto: true },
+        { name: "Mother's Day Heart Chocolate Box", price: '£50', badge: 'Popular', description: '', variants: [], notes: '', existingPhoto: true },
+        { name: "'I Love You' Heart Chocolate Box", price: '£45', badge: '', description: '', variants: [], notes: '', existingPhoto: true },
+        { name: 'Happy Birthday Mum Heart Box', price: '£35', badge: '', description: '', variants: [], notes: '', existingPhoto: true },
+        { name: '30th Birthday Heart Chocolate Box', price: '£50', badge: '', description: '', variants: [], notes: '', existingPhoto: true },
+        { name: 'Ramadan Mubarak Heart Box', price: '£35', badge: '', description: '', variants: [], notes: '', existingPhoto: true },
+        { name: 'Ramadan Mubarak Milk Chocolate Heart Box', price: '£35', badge: '', description: '', variants: [], notes: '', existingPhoto: true },
       ]
     },
     {
@@ -600,8 +684,8 @@ const DATA = {
       subtitle: 'Cakes · Cakesicles · Teacup cupcakes',
       description: 'Bespoke celebration cakes and sweet treats — from show-stopping birthday cakes to elegant cakesicles, each one designed and decorated to your vision.',
       products: [
-        { name: '21st Birthday White Chocolate Heart Cake', price: 'DM for price', badge: 'Bespoke', hasPhoto: true, existingPhoto: true },
-        { name: 'Bride To Be Chocolate Cakesicle', price: 'DM for price', badge: '', hasPhoto: true, existingPhoto: true },
+        { name: '21st Birthday White Chocolate Heart Cake', price: 'DM for price', badge: 'Bespoke', description: '', variants: [], notes: '', existingPhoto: true },
+        { name: 'Bride To Be Chocolate Cakesicle', price: 'DM for price', badge: '', description: '', variants: [], notes: '', existingPhoto: true },
       ]
     },
     {
@@ -610,12 +694,12 @@ const DATA = {
       subtitle: 'Mix treat box · Candy box · Gift baskets',
       description: 'Luxury mixed treat boxes and gift baskets packed with chocolate-dipped strawberries, dates, and handcrafted confections — the ultimate gifting experience.',
       products: [
-        { name: 'Luxury Mixed Treat Box', price: 'DM for price', badge: 'Premium', hasPhoto: true, existingPhoto: true },
-        { name: 'Blue Chocolate Treat Box', price: 'DM for price', badge: 'New', hasPhoto: true, existingPhoto: true },
-        { name: 'Assorted Chocolate Covered Dates Gift Box', price: 'DM for price', badge: '', hasPhoto: true, existingPhoto: true },
-        { name: 'Baby Shark Themed Strawberry Box', price: 'DM for price', badge: 'Kids', hasPhoto: true, existingPhoto: true },
-        { name: 'Personalised Blue Chocolate Strawberry Basket', price: 'DM for price', badge: '', hasPhoto: true, existingPhoto: true },
-        { name: "'Love You Baby' White Chocolate Strawberry Basket", price: 'DM for price', badge: '', hasPhoto: true, existingPhoto: true },
+        { name: 'Luxury Mixed Treat Box', price: 'DM for price', badge: 'Premium', description: '', variants: [], notes: '', existingPhoto: true },
+        { name: 'Blue Chocolate Treat Box', price: 'DM for price', badge: 'New', description: '', variants: [], notes: '', existingPhoto: true },
+        { name: 'Assorted Chocolate Covered Dates Gift Box', price: 'DM for price', badge: '', description: '', variants: [], notes: '', existingPhoto: true },
+        { name: 'Baby Shark Themed Strawberry Box', price: 'DM for price', badge: 'Kids', description: '', variants: [], notes: '', existingPhoto: true },
+        { name: 'Personalised Blue Chocolate Strawberry Basket', price: 'DM for price', badge: '', description: '', variants: [], notes: '', existingPhoto: true },
+        { name: "'Love You Baby' White Chocolate Strawberry Basket", price: 'DM for price', badge: '', description: '', variants: [], notes: '', existingPhoto: true },
       ]
     },
     {
@@ -624,8 +708,8 @@ const DATA = {
       subtitle: 'Truffles · Fudge · Strawberries · Fruit platters',
       description: 'Individual sweet treats and platters — from hand-dipped chocolate strawberries to luxury fresh fruit platters, perfect for any gathering or as a standalone gift.',
       products: [
-        { name: 'Decorated Strawberries Box of 12 with Mini Spoons', price: '£22', badge: 'Popular', hasPhoto: true, existingPhoto: true },
-        { name: 'Luxury Fresh Fruit Platter', price: 'DM for price', badge: '', hasPhoto: true, existingPhoto: true },
+        { name: 'Decorated Strawberries Box of 12 with Mini Spoons', price: '£22', badge: 'Popular', description: '', variants: [], notes: '', existingPhoto: true },
+        { name: 'Luxury Fresh Fruit Platter', price: 'DM for price', badge: '', description: '', variants: [], notes: '', existingPhoto: true },
       ]
     },
     {
@@ -634,7 +718,7 @@ const DATA = {
       subtitle: 'Smash pinata · Themed creations · Baby items',
       description: 'Creative themed chocolate gifts for special occasions — from Ramadan and Eid to baby showers and themed parties. Unique designs that make every celebration memorable.',
       products: [
-        { name: 'Fillable Crescent Moon Gift Box with Flowers', price: '£35', badge: 'Seasonal', hasPhoto: true, existingPhoto: true },
+        { name: 'Fillable Crescent Moon Gift Box with Flowers', price: '£35', badge: 'Seasonal', description: '', variants: [], notes: '', existingPhoto: true },
       ]
     },
   ],
@@ -658,41 +742,38 @@ function render() {
 }
 
 function renderCategories() {
-  const container = document.getElementById('categories-container');
-  container.innerHTML = '';
-
+  const c = document.getElementById('categories-container');
+  c.innerHTML = '';
   state.categories.forEach((cat, ci) => {
-    const section = document.createElement('div');
-    section.className = 'category-section';
-    section.innerHTML = `
+    const s = document.createElement('div');
+    s.className = 'category-section';
+    s.innerHTML = `
       <div class="category-header" onclick="toggleCategory(this)">
-        <div>
-          <h2>${escHtml(cat.title)}</h2>
-        </div>
-        <div style="display:flex;align-items:center;">
-          <span class="count">${cat.products.filter(p => !p._removed).length} products</span>
+        <h2>${esc(cat.title)}</h2>
+        <div class="meta">
+          <span class="count">${cat.products.filter(p=>!p._removed).length} products</span>
           <span class="arrow">▼</span>
         </div>
       </div>
       <div class="category-body">
         <div class="desc-block">
-          <label>Category Name</label>
-          <input type="text" value="${escAttr(cat.title)}" onchange="state.categories[${ci}].title=this.value;updateCounts();">
+          <label class="field-label">Category Name</label>
+          <input type="text" value="${escA(cat.title)}" onchange="state.categories[${ci}].title=this.value;updateCounts();">
         </div>
         <div class="desc-block">
-          <label>Subtitle (short list of what's included)</label>
-          <input type="text" value="${escAttr(cat.subtitle)}" onchange="state.categories[${ci}].subtitle=this.value;">
+          <label class="field-label">Subtitle</label>
+          <input type="text" value="${escA(cat.subtitle)}" onchange="state.categories[${ci}].subtitle=this.value;">
         </div>
         <div class="desc-block">
-          <label>Description</label>
-          <textarea onchange="state.categories[${ci}].description=this.value;">${escHtml(cat.description)}</textarea>
+          <label class="field-label">Category Description</label>
+          <textarea onchange="state.categories[${ci}].description=this.value;">${esc(cat.description)}</textarea>
         </div>
         <div class="section-divider"></div>
         <div id="products-${ci}"></div>
         <button class="btn btn-add" onclick="addProduct(${ci})">+ Add New Product</button>
       </div>
     `;
-    container.appendChild(section);
+    c.appendChild(s);
     renderProducts(ci);
   });
 }
@@ -704,103 +785,159 @@ function renderProducts(ci) {
   const cat = state.categories[ci];
 
   cat.products.forEach((prod, pi) => {
-    const key = ci + '-' + pi;
-    const hasUpload = !!uploadedImages[key];
+    const key = `${ci}-${pi}`;
+    const files = uploadedImages[key] || [];
     const card = document.createElement('div');
     card.className = `product-card${prod._removed ? ' marked-remove' : ''}${prod._new ? ' new-product' : ''}`;
 
-    let imageHtml = '';
-    if (hasUpload) {
-      const file = uploadedImages[key];
-      const previewUrl = URL.createObjectURL(file);
-      imageHtml = `
-        <div class="image-upload-area">
-          <div class="image-preview">
-            <img src="${previewUrl}" alt="Preview">
-            <button class="remove-img" onclick="removeImage(${ci},${pi})" title="Remove photo">×</button>
-          </div>
-          <div class="image-info">
-            <div class="filename">${escHtml(file.name)}</div>
-            <div class="filesize">${formatSize(file.size)}</div>
-            <span class="has-photo-badge">Uploaded ✓</span>
-          </div>
+    if (prod._removed) {
+      card.innerHTML = `
+        <span class="product-number">${pi + 1}</span>
+        <div style="padding:0.5rem 0;">
+          <strong style="text-decoration:line-through;">${esc(prod.name)}</strong>
+          <span style="color:var(--danger);font-size:0.75rem;margin-left:0.5rem;">Will be removed</span>
+        </div>
+        <div class="product-footer" style="border:none;margin:0;padding:0;">
+          <button class="btn btn-undo" onclick="undoRemove(${ci},${pi})">Undo</button>
         </div>
       `;
-    } else if (prod.existingPhoto) {
-      imageHtml = `
-        <div class="image-upload-area">
-          <label class="upload-btn">
-            📷 Replace Photo
-            <input type="file" accept="image/*" onchange="handleImageUpload(${ci},${pi},this)">
-          </label>
-          <span class="existing-photo-note">Already on website — only upload if you want to replace it</span>
-        </div>
-      `;
-    } else {
-      imageHtml = `
-        <div class="image-upload-area">
-          <label class="upload-btn">
-            📷 Upload Photo
-            <input type="file" accept="image/*" onchange="handleImageUpload(${ci},${pi},this)">
-          </label>
-        </div>
-      `;
+      container.appendChild(card);
+      return;
     }
+
+    // Build image gallery HTML
+    let galleryHtml = '';
+    if (prod.existingPhoto && files.length === 0) {
+      galleryHtml += `<div class="image-thumb existing"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Crect fill='%23F5E1D0' width='80' height='80'/%3E%3Ctext x='50%25' y='55%25' text-anchor='middle' font-size='10' fill='%236B5148'%3EOn site%3C/text%3E%3C/svg%3E" alt="Existing"></div>`;
+    }
+    files.forEach((f, fi) => {
+      const url = URL.createObjectURL(f);
+      galleryHtml += `<div class="image-thumb"><img src="${url}" alt="Preview"><button class="remove-img" onclick="removeImage(${ci},${pi},${fi})">×</button></div>`;
+    });
+    galleryHtml += `<label class="upload-btn"><input type="file" accept="image/*" multiple onchange="handleImages(${ci},${pi},this)">+</label>`;
+
+    // Variants HTML
+    let variantsHtml = '';
+    (prod.variants || []).forEach((v, vi) => {
+      variantsHtml += `
+        <div class="variant-row">
+          <input type="text" value="${escA(v.option)}" placeholder="e.g. Box of 12" onchange="state.categories[${ci}].products[${pi}].variants[${vi}].option=this.value;">
+          <input type="text" value="${escA(v.price)}" placeholder="£XX" onchange="state.categories[${ci}].products[${pi}].variants[${vi}].price=this.value;">
+          <button class="variant-remove" onclick="removeVariant(${ci},${pi},${vi})">×</button>
+        </div>
+      `;
+    });
+
+    const hasDesc = prod.description && prod.description.trim();
+    const hasVariants = prod.variants && prod.variants.length > 0;
+    const hasNotes = prod.notes && prod.notes.trim();
 
     card.innerHTML = `
       <span class="product-number">${prod._new ? 'NEW' : pi + 1}</span>
-      <div class="product-fields">
-        <div class="field">
-          <label>Product Name</label>
-          <input type="text" value="${escAttr(prod.name)}" ${prod._removed ? 'disabled' : ''} onchange="state.categories[${ci}].products[${pi}].name=this.value;renderFeatured();">
+
+      <div class="product-top">
+        <div>
+          <label class="field-label">Product Name</label>
+          <input type="text" value="${escA(prod.name)}" onchange="state.categories[${ci}].products[${pi}].name=this.value;renderFeatured();">
         </div>
-        <div class="field">
-          <label>Price</label>
-          <input type="text" value="${escAttr(prod.price)}" ${prod._removed ? 'disabled' : ''} onchange="state.categories[${ci}].products[${pi}].price=this.value;" placeholder="£XX or DM for price">
-        </div>
-        <div class="field">
-          <label>Badge</label>
-          <select ${prod._removed ? 'disabled' : ''} onchange="state.categories[${ci}].products[${pi}].badge=this.value;">
-            ${BADGE_OPTIONS.map(b => `<option value="${b}" ${prod.badge === b ? 'selected' : ''}>${b || '— None —'}</option>`).join('')}
-          </select>
+        <div class="product-top-row">
+          <div>
+            <label class="field-label">Base Price</label>
+            <input type="text" value="${escA(prod.price)}" onchange="state.categories[${ci}].products[${pi}].price=this.value;" placeholder="£XX or DM for price">
+          </div>
+          <div>
+            <label class="field-label">Badge</label>
+            <select onchange="state.categories[${ci}].products[${pi}].badge=this.value;">
+              ${BADGE_OPTIONS.map(b => `<option value="${b}" ${prod.badge===b?'selected':''}>${b||'— None —'}</option>`).join('')}
+            </select>
+          </div>
         </div>
       </div>
-      ${prod._removed ? '' : imageHtml}
-      <div style="display:flex;justify-content:flex-end;align-items:center;flex-wrap:wrap;">
-        <div class="product-actions">
-          ${prod._removed
-            ? `<button class="btn btn-undo" onclick="undoRemove(${ci},${pi})">Undo Remove</button>`
-            : `<button class="btn btn-remove" onclick="removeProduct(${ci},${pi})">Remove</button>`
-          }
+
+      <!-- Description -->
+      <div class="product-section ${hasDesc ? 'open' : ''}" onclick="if(event.target.closest('.section-toggle'))this.classList.toggle('open')">
+        <div class="section-toggle">
+          <label class="field-label">Description <span class="field-hint">(what the customer sees)</span></label>
+          <span class="toggle-arrow">▶</span>
         </div>
+        <div class="section-content" onclick="event.stopPropagation()">
+          <textarea rows="3" placeholder="Describe this product — what's included, colours, personalisation options..." onchange="state.categories[${ci}].products[${pi}].description=this.value;">${esc(prod.description||'')}</textarea>
+        </div>
+      </div>
+
+      <!-- Size / Quantity Options -->
+      <div class="product-section ${hasVariants ? 'open' : ''}" onclick="if(event.target.closest('.section-toggle'))this.classList.toggle('open')">
+        <div class="section-toggle">
+          <label class="field-label">Size / Quantity Options <span class="field-hint">(if this comes in different sizes)</span></label>
+          <span class="toggle-arrow">▶</span>
+        </div>
+        <div class="section-content" onclick="event.stopPropagation()">
+          <div id="variants-${ci}-${pi}">${variantsHtml}</div>
+          <button class="btn-add-sm" onclick="addVariant(${ci},${pi})">+ Add Option</button>
+        </div>
+      </div>
+
+      <!-- Photos -->
+      <div class="product-section open" onclick="if(event.target.closest('.section-toggle'))this.classList.toggle('open')">
+        <div class="section-toggle">
+          <label class="field-label">Photos <span class="field-hint">(${files.length} uploaded${prod.existingPhoto ? ', 1 on site' : ''})</span></label>
+          <span class="toggle-arrow">▶</span>
+        </div>
+        <div class="section-content" onclick="event.stopPropagation()">
+          <div class="image-gallery">${galleryHtml}</div>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="product-section ${hasNotes ? 'open' : ''}" onclick="if(event.target.closest('.section-toggle'))this.classList.toggle('open')">
+        <div class="section-toggle">
+          <label class="field-label">Notes <span class="field-hint">(storage, allergens, disclaimers)</span></label>
+          <span class="toggle-arrow">▶</span>
+        </div>
+        <div class="section-content" onclick="event.stopPropagation()">
+          <textarea rows="2" placeholder="e.g. Best consumed on day of collection. Keep refrigerated." onchange="state.categories[${ci}].products[${pi}].notes=this.value;">${esc(prod.notes||'')}</textarea>
+        </div>
+      </div>
+
+      <div class="product-footer">
+        <button class="btn btn-remove" onclick="removeProduct(${ci},${pi})">Remove Product</button>
       </div>
     `;
     container.appendChild(card);
   });
 }
 
-function handleImageUpload(ci, pi, input) {
-  const file = input.files[0];
-  if (!file) return;
-  const key = ci + '-' + pi;
-  uploadedImages[key] = file;
-  state.categories[ci].products[pi].hasPhoto = true;
+function handleImages(ci, pi, input) {
+  const key = `${ci}-${pi}`;
+  if (!uploadedImages[key]) uploadedImages[key] = [];
+  for (const f of input.files) {
+    uploadedImages[key].push(f);
+  }
   renderProducts(ci);
-  showToast('Photo added!');
+  showToast(`${input.files.length} photo${input.files.length>1?'s':''} added!`);
 }
 
-function removeImage(ci, pi) {
-  const key = ci + '-' + pi;
-  delete uploadedImages[key];
-  const prod = state.categories[ci].products[pi];
-  if (!prod.existingPhoto) prod.hasPhoto = false;
+function removeImage(ci, pi, fi) {
+  const key = `${ci}-${pi}`;
+  if (uploadedImages[key]) {
+    uploadedImages[key].splice(fi, 1);
+    if (uploadedImages[key].length === 0) delete uploadedImages[key];
+  }
   renderProducts(ci);
 }
 
-function formatSize(bytes) {
-  if (bytes < 1024) return bytes + ' B';
-  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+function addVariant(ci, pi) {
+  if (!state.categories[ci].products[pi].variants) state.categories[ci].products[pi].variants = [];
+  state.categories[ci].products[pi].variants.push({ option: '', price: '' });
+  renderProducts(ci);
+  // Focus the new variant input
+  const el = document.getElementById(`variants-${ci}-${pi}`);
+  if (el && el.lastElementChild) el.lastElementChild.querySelector('input').focus();
+}
+
+function removeVariant(ci, pi, vi) {
+  state.categories[ci].products[pi].variants.splice(vi, 1);
+  renderProducts(ci);
 }
 
 function toggleCategory(header) {
@@ -809,20 +946,16 @@ function toggleCategory(header) {
 
 function addProduct(ci) {
   state.categories[ci].products.push({
-    name: '',
-    price: '',
-    badge: '',
-    hasPhoto: false,
-    existingPhoto: false,
-    _new: true
+    name: '', price: '', badge: '', description: '', variants: [], notes: '',
+    existingPhoto: false, _new: true
   });
   renderProducts(ci);
   updateCounts();
   const container = document.getElementById(`products-${ci}`);
-  const lastCard = container.lastElementChild;
-  if (lastCard) {
-    lastCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    lastCard.querySelector('input').focus();
+  const last = container.lastElementChild;
+  if (last) {
+    last.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => { const inp = last.querySelector('input'); if(inp) inp.focus(); }, 400);
   }
 }
 
@@ -839,42 +972,41 @@ function undoRemove(ci, pi) {
 }
 
 function updateCounts() {
-  document.querySelectorAll('.category-section').forEach((section, ci) => {
-    const count = state.categories[ci].products.filter(p => !p._removed).length;
-    section.querySelector('.count').textContent = `${count} products`;
+  document.querySelectorAll('.category-section').forEach((s, ci) => {
+    const n = state.categories[ci].products.filter(p=>!p._removed).length;
+    s.querySelector('.count').textContent = `${n} products`;
   });
 }
 
 function getAllProductNames() {
   const names = [];
   state.categories.forEach(cat => {
-    cat.products.forEach(prod => {
-      if (!prod._removed && prod.name.trim()) {
-        names.push(prod.name);
-      }
-    });
+    cat.products.forEach(p => { if (!p._removed && p.name.trim()) names.push(p.name); });
   });
   return names;
 }
 
 function renderFeatured() {
   const body = document.getElementById('featured-body');
-  const allNames = getAllProductNames();
-
+  const names = getAllProductNames();
   body.innerHTML = '';
   for (let i = 0; i < 6; i++) {
-    const current = state.featured[i] || '';
-    const pick = document.createElement('div');
-    pick.className = 'featured-pick';
-    pick.innerHTML = `
-      <span class="pick-number">${i + 1}</span>
+    const cur = state.featured[i] || '';
+    const d = document.createElement('div');
+    d.className = 'featured-pick';
+    d.innerHTML = `
+      <span class="pick-number">${i+1}</span>
       <select onchange="state.featured[${i}]=this.value;">
         <option value="">— Select a product —</option>
-        ${allNames.map(n => `<option value="${escAttr(n)}" ${n === current ? 'selected' : ''}>${escHtml(n)}</option>`).join('')}
+        ${names.map(n => `<option value="${escA(n)}" ${n===cur?'selected':''}>${esc(n)}</option>`).join('')}
       </select>
     `;
-    body.appendChild(pick);
+    body.appendChild(d);
   }
+}
+
+function slugify(s) {
+  return s.toLowerCase().replace(/['']/g,'').replace(/[&]/g,'and').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
 }
 
 function getExportData() {
@@ -884,44 +1016,30 @@ function getExportData() {
       title: cat.title,
       subtitle: cat.subtitle,
       description: cat.description,
-      products: cat.products
-        .filter(p => !p._removed)
-        .filter(p => p.name.trim())
-        .map((p, pi) => {
-          const origIndex = state.categories[ci].products.indexOf(p);
-          const key = ci + '-' + origIndex;
-          const uploaded = uploadedImages[key];
-          return {
-            name: p.name,
-            price: p.price,
-            badge: p.badge || null,
-            hasExistingPhoto: !!p.existingPhoto,
-            hasNewPhoto: !!uploaded,
-            newPhotoFilename: uploaded ? sanitizeFilename(cat.title, p.name, uploaded.name) : null,
-            isNew: !!p._new,
-          };
-        }),
-      removedProducts: cat.products
-        .filter(p => p._removed && !p._new)
-        .map(p => p.name),
+      products: cat.products.filter(p=>!p._removed).filter(p=>p.name.trim()).map(p => {
+        const oi = state.categories[ci].products.indexOf(p);
+        const key = `${ci}-${oi}`;
+        const files = uploadedImages[key] || [];
+        return {
+          name: p.name,
+          price: p.price,
+          badge: p.badge || null,
+          description: p.description || '',
+          variants: (p.variants||[]).filter(v=>v.option.trim()||v.price.trim()),
+          notes: p.notes || '',
+          hasExistingPhoto: !!p.existingPhoto,
+          newPhotos: files.map((f,i) => ({
+            filename: `${slugify(cat.title)}/${slugify(p.name)}${files.length>1?'-'+(i+1):''}.${f.name.split('.').pop().toLowerCase()}`,
+            originalName: f.name,
+            size: f.size,
+          })),
+          isNew: !!p._new,
+        };
+      }),
+      removedProducts: cat.products.filter(p=>p._removed&&!p._new).map(p=>p.name),
     })),
-    featured: state.featured.filter(f => f),
+    featured: state.featured.filter(Boolean),
   };
-}
-
-function sanitizeFilename(category, productName, originalName) {
-  const ext = originalName.split('.').pop().toLowerCase();
-  const slug = productName
-    .toLowerCase()
-    .replace(/['']/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-  const catSlug = category
-    .toLowerCase()
-    .replace(/[&]/g, 'and')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-  return `${catSlug}/${slug}.${ext}`;
 }
 
 async function downloadZip() {
@@ -929,89 +1047,70 @@ async function downloadZip() {
   const fill = document.getElementById('progress-fill');
   const text = document.getElementById('progress-text');
   overlay.classList.add('show');
-
   try {
     const zip = new JSZip();
     const data = getExportData();
-
-    // Add JSON
     fill.style.width = '10%';
     text.textContent = 'Saving product list...';
     zip.file('products.json', JSON.stringify(data, null, 2));
 
-    // Add images
-    const imageKeys = Object.keys(uploadedImages);
-    const total = imageKeys.length;
-
-    for (let i = 0; i < total; i++) {
-      const key = imageKeys[i];
-      const file = uploadedImages[key];
+    // Collect all images
+    const allFiles = [];
+    Object.entries(uploadedImages).forEach(([key, files]) => {
       const [ci, pi] = key.split('-').map(Number);
       const prod = state.categories[ci].products[pi];
       const cat = state.categories[ci];
-      const filename = sanitizeFilename(cat.title, prod.name, file.name);
+      files.forEach((f, fi) => {
+        const name = `${slugify(cat.title)}/${slugify(prod.name)}${files.length>1?'-'+(fi+1):''}.${f.name.split('.').pop().toLowerCase()}`;
+        allFiles.push({ file: f, name });
+      });
+    });
 
-      text.textContent = `Adding photo ${i + 1} of ${total}...`;
-      fill.style.width = (10 + (80 * (i + 1) / total)) + '%';
-
-      const arrayBuffer = await file.arrayBuffer();
-      zip.file('photos/' + filename, arrayBuffer);
+    for (let i = 0; i < allFiles.length; i++) {
+      text.textContent = `Adding photo ${i+1} of ${allFiles.length}...`;
+      fill.style.width = (10 + 80*(i+1)/allFiles.length) + '%';
+      const buf = await allFiles[i].file.arrayBuffer();
+      zip.file('photos/' + allFiles[i].name, buf);
     }
 
-    // Generate ZIP
     fill.style.width = '95%';
-    text.textContent = 'Creating ZIP file...';
-
+    text.textContent = 'Creating ZIP...';
     const blob = await zip.generateAsync({ type: 'blob' });
-
     fill.style.width = '100%';
     text.textContent = 'Done!';
 
-    // Download
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = 'chocolate-affair-products.zip';
     a.click();
     URL.revokeObjectURL(url);
-
-    setTimeout(() => {
-      overlay.classList.remove('show');
-      showToast('Downloaded! Send the ZIP file to Ibby');
-    }, 500);
-
+    setTimeout(() => { overlay.classList.remove('show'); showToast('Downloaded! Send the ZIP to Ibby'); }, 500);
   } catch (err) {
     overlay.classList.remove('show');
     console.error(err);
-    showToast('Error creating download — try "Copy Product List" instead');
+    showToast('Error — try Copy Product List instead');
   }
 }
 
 function copyToClipboard() {
   const data = getExportData();
-  const text = JSON.stringify(data, null, 2);
-  navigator.clipboard.writeText(text).then(() => {
-    showToast('Copied! Paste it in a message to Ibby');
-  }).catch(() => {
+  const t = JSON.stringify(data, null, 2);
+  navigator.clipboard.writeText(t).then(() => showToast('Copied! Paste to Ibby')).catch(() => {
     const ta = document.createElement('textarea');
-    ta.value = text;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    showToast('Copied! Paste it in a message to Ibby');
+    ta.value = t; document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta); showToast('Copied! Paste to Ibby');
   });
 }
 
 function showToast(msg) {
-  const toast = document.getElementById('toast');
-  toast.textContent = msg;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3000);
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function escAttr(s) { return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escA(s) { return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 render();
 </script>
