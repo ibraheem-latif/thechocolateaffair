@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ShoppingBag, ArrowLeft, ChevronRight } from 'lucide-react';
 import { getCategoryBySlug, getAllCategorySlugs } from '@/lib/products';
-import { INSTAGRAM_DM_URL, getOrderDmUrl } from '@/lib/constants';
+import { INSTAGRAM_DM_URL } from '@/lib/constants';
 
 export function generateStaticParams() {
   return getAllCategorySlugs().map((slug) => ({ category: slug }));
@@ -88,9 +88,10 @@ export default function CategoryPage({ params }: { params: { category: string } 
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {cat.products.map((product, index) => (
-              <div
+              <Link
                 key={product.name}
-                className="group bg-white rounded-2xl overflow-hidden border border-sand/40 card-hover"
+                href={`/${params.category}/${product.slug}`}
+                className="group bg-white rounded-2xl overflow-hidden border border-sand/40 card-hover block"
               >
                 <div className="relative h-64 overflow-hidden bg-champagne">
                   <Image
@@ -107,15 +108,9 @@ export default function CategoryPage({ params }: { params: { category: string } 
                     </span>
                   )}
                   <div className="absolute inset-0 bg-espresso/80 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center z-20">
-                    <a
-                      href={getOrderDmUrl(product.name)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 bg-white text-espresso px-6 py-3 rounded-full text-xs font-bold tracking-wider transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 hover:bg-champagne uppercase"
-                    >
-                      <ShoppingBag size={15} />
-                      DM Us to Order
-                    </a>
+                    <span className="flex items-center gap-2 bg-white text-espresso px-6 py-3 rounded-full text-xs font-bold tracking-wider transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 uppercase">
+                      View Details →
+                    </span>
                   </div>
                 </div>
 
@@ -130,7 +125,7 @@ export default function CategoryPage({ params }: { params: { category: string } 
                     {product.price}
                   </p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 

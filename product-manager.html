@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Chocolate Affair — Product Manager</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --espresso: #2C1F1A;
+    --rose-gold: #C9918A;
+    --rose-gold-light: #D4A89E;
+    --champagne: #F5E1D0;
+    --cream: #FFFBF5;
+    --shell: #F0DDD0;
+    --mocha: #6B5148;
+    --sand: #E4D5C7;
+    --white: #FFFFFF;
+    --danger: #c0392b;
+    --danger-light: #fdf0ef;
+    --success: #27ae60;
+    --success-light: #eafaf1;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--cream);
+    color: var(--espresso);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(155deg, #0f0a08 0%, #1a1109 20%, #2C1F1A 50%, #3d2b24 75%, #5E4A3C 100%);
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    color: white;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  .header p {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--rose-gold);
+    font-weight: 600;
+  }
+  .header .subtitle {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.5);
+    margin-top: 0.75rem;
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: 400;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Layout */
+  .container { max-width: 900px; margin: 0 auto; padding: 1.5rem; }
+
+  /* Instructions banner */
+  .instructions {
+    background: var(--white);
+    border: 1px solid var(--sand);
+    border-left: 4px solid var(--rose-gold);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+    font-size: 0.85rem;
+    color: var(--mocha);
+    line-height: 1.7;
+  }
+  .instructions strong { color: var(--espresso); }
+
+  /* Category sections */
+  .category-section {
+    background: var(--white);
+    border: 1px solid var(--sand);
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
+  .category-header {
+    background: linear-gradient(135deg, var(--espresso), var(--mocha));
+    color: white;
+    padding: 1.25rem 1.5rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+  .category-header:hover { opacity: 0.95; }
+  .category-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  .category-header .count {
+    background: rgba(255,255,255,0.15);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .category-header .arrow {
+    font-size: 1.25rem;
+    transition: transform 0.2s;
+    margin-left: 1rem;
+  }
+  .category-section.collapsed .arrow { transform: rotate(-90deg); }
+  .category-body { padding: 1.5rem; }
+  .category-section.collapsed .category-body { display: none; }
+
+  /* Description editing */
+  .desc-block { margin-bottom: 1.5rem; }
+  .desc-block label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--mocha);
+    margin-bottom: 0.5rem;
+  }
+  .desc-block textarea {
+    width: 100%;
+    border: 1px solid var(--sand);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: var(--espresso);
+    resize: vertical;
+    min-height: 60px;
+    transition: border-color 0.2s;
+    background: var(--cream);
+  }
+  .desc-block textarea:focus {
+    outline: none;
+    border-color: var(--rose-gold);
+    background: var(--white);
+  }
+  .desc-block input[type="text"] {
+    width: 100%;
+    border: 1px solid var(--sand);
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: var(--espresso);
+    background: var(--cream);
+  }
+  .desc-block input[type="text"]:focus {
+    outline: none;
+    border-color: var(--rose-gold);
+    background: var(--white);
+  }
+
+  /* Product cards */
+  .product-card {
+    border: 1px solid var(--sand);
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-bottom: 0.75rem;
+    background: var(--cream);
+    position: relative;
+    transition: box-shadow 0.2s;
+  }
+  .product-card:hover { box-shadow: 0 2px 12px rgba(44,31,26,0.08); }
+  .product-card.marked-remove {
+    border-color: var(--danger);
+    background: var(--danger-light);
+    opacity: 0.6;
+  }
+  .product-card .product-number {
+    position: absolute;
+    top: -0.5rem;
+    left: 1rem;
+    background: var(--espresso);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.15rem 0.6rem;
+    border-radius: 10px;
+  }
+  .product-card.new-product .product-number {
+    background: var(--success);
+  }
+
+  .product-fields {
+    display: grid;
+    grid-template-columns: 1fr 120px 140px;
+    gap: 0.75rem;
+    align-items: end;
+  }
+  @media (max-width: 600px) {
+    .product-fields { grid-template-columns: 1fr; }
+  }
+
+  .field label {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--mocha);
+    margin-bottom: 0.3rem;
+  }
+  .field input, .field select {
+    width: 100%;
+    border: 1px solid var(--sand);
+    border-radius: 6px;
+    padding: 0.55rem 0.75rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: var(--espresso);
+    background: var(--white);
+  }
+  .field input:focus, .field select:focus {
+    outline: none;
+    border-color: var(--rose-gold);
+  }
+
+  .product-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    justify-content: flex-end;
+  }
+
+  /* Photo status */
+  .photo-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
+  }
+  .photo-row label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--mocha); }
+  .photo-status {
+    display: flex;
+    gap: 0.4rem;
+  }
+  .photo-status button {
+    padding: 0.3rem 0.7rem;
+    border-radius: 5px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border: 1px solid var(--sand);
+    cursor: pointer;
+    background: var(--white);
+    color: var(--mocha);
+    transition: all 0.15s;
+  }
+  .photo-status button.active-yes { background: var(--success-light); border-color: var(--success); color: var(--success); }
+  .photo-status button.active-need { background: #fef9e7; border-color: #f39c12; color: #e67e22; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+  }
+  .btn-add {
+    background: var(--champagne);
+    color: var(--espresso);
+    border: 1px dashed var(--rose-gold);
+    width: 100%;
+    justify-content: center;
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+  }
+  .btn-add:hover { background: var(--shell); }
+  .btn-remove {
+    background: transparent;
+    color: var(--danger);
+    border: 1px solid transparent;
+    font-size: 0.7rem;
+    padding: 0.35rem 0.65rem;
+  }
+  .btn-remove:hover { background: var(--danger-light); border-color: var(--danger); }
+  .btn-undo {
+    background: transparent;
+    color: var(--success);
+    border: 1px solid var(--success);
+    font-size: 0.7rem;
+    padding: 0.35rem 0.65rem;
+  }
+
+  .btn-primary {
+    background: var(--rose-gold);
+    color: white;
+    padding: 1rem 2rem;
+    font-size: 0.9rem;
+    border-radius: 50px;
+    letter-spacing: 0.05em;
+  }
+  .btn-primary:hover { background: var(--rose-gold-light); transform: translateY(-1px); box-shadow: 0 4px 15px rgba(201,145,138,0.3); }
+  .btn-secondary {
+    background: var(--white);
+    color: var(--espresso);
+    border: 2px solid var(--espresso);
+    padding: 1rem 2rem;
+    font-size: 0.9rem;
+    border-radius: 50px;
+    letter-spacing: 0.05em;
+  }
+  .btn-secondary:hover { background: var(--espresso); color: white; }
+
+  /* Featured section */
+  .featured-section {
+    background: var(--white);
+    border: 1px solid var(--sand);
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
+  .featured-header {
+    background: linear-gradient(135deg, var(--rose-gold), var(--rose-gold-light));
+    color: white;
+    padding: 1.25rem 1.5rem;
+  }
+  .featured-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+  }
+  .featured-header p { font-size: 0.8rem; opacity: 0.85; margin-top: 0.25rem; }
+  .featured-body { padding: 1.5rem; }
+
+  .featured-pick {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    border: 1px solid var(--sand);
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    background: var(--cream);
+  }
+  .featured-pick .pick-number {
+    background: var(--rose-gold);
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .featured-pick select {
+    flex: 1;
+    border: 1px solid var(--sand);
+    border-radius: 6px;
+    padding: 0.5rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: var(--espresso);
+    background: var(--white);
+  }
+
+  /* Export area */
+  .export-section {
+    text-align: center;
+    padding: 2rem 0;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--espresso);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* Divider */
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--sand), transparent);
+    margin: 0.5rem 0 1.5rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <p>Product Manager</p>
+  <h1>The Chocolate Affair</h1>
+  <p class="subtitle">Fill in your products below, then click "Download" at the bottom to send the file to Ibby.</p>
+</div>
+
+<div class="container">
+
+  <div class="instructions">
+    <strong>How to use this:</strong><br>
+    1. Check each category — edit the name or description if needed<br>
+    2. Check each product — edit the name, price, or badge<br>
+    3. Click <strong>"+ Add Product"</strong> to add new products<br>
+    4. Click <strong>"Remove"</strong> on products you want to take off the site<br>
+    5. Choose your <strong>6 Featured Products</strong> for the homepage<br>
+    6. Click <strong>"Download"</strong> at the bottom and send the file to Ibby
+  </div>
+
+  <div id="categories-container"></div>
+
+  <!-- Featured Products -->
+  <div class="featured-section">
+    <div class="featured-header">
+      <h2>Featured Products</h2>
+      <p>Pick 6 products to showcase on the homepage</p>
+    </div>
+    <div class="featured-body" id="featured-body"></div>
+  </div>
+
+  <!-- Export -->
+  <div class="export-section">
+    <button class="btn btn-primary" onclick="downloadJSON()">Download Product List</button>
+    <button class="btn btn-secondary" onclick="copyToClipboard()">Copy to Clipboard</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// Current product data from the website
+const DATA = {
+  categories: [
+    {
+      slug: 'chocolate-boxes',
+      title: 'Chocolate Boxes',
+      subtitle: 'Heart boxes · Square box · Football box',
+      description: 'Our signature personalised chocolate boxes — handcrafted with Belgian chocolate, fresh strawberries, and your custom message. Perfect for birthdays, anniversaries, and every celebration.',
+      products: [
+        { name: 'Birthday Pink Heart Chocolate Box', price: '£50', badge: 'Best Seller', hasPhoto: true },
+        { name: "Mother's Day Heart Chocolate Box", price: '£50', badge: 'Popular', hasPhoto: true },
+        { name: "'I Love You' Heart Chocolate Box", price: '£45', badge: '', hasPhoto: true },
+        { name: 'Happy Birthday Mum Heart Box', price: '£35', badge: '', hasPhoto: true },
+        { name: '30th Birthday Heart Chocolate Box', price: '£50', badge: '', hasPhoto: true },
+        { name: 'Ramadan Mubarak Heart Box', price: '£35', badge: '', hasPhoto: true },
+        { name: 'Ramadan Mubarak Milk Chocolate Heart Box', price: '£35', badge: '', hasPhoto: true },
+      ]
+    },
+    {
+      slug: 'cakes-cupcakes',
+      title: 'Cakes & Cupcakes',
+      subtitle: 'Cakes · Cakesicles · Teacup cupcakes',
+      description: 'Bespoke celebration cakes and sweet treats — from show-stopping birthday cakes to elegant cakesicles, each one designed and decorated to your vision.',
+      products: [
+        { name: '21st Birthday White Chocolate Heart Cake', price: 'DM for price', badge: 'Bespoke', hasPhoto: true },
+        { name: 'Bride To Be Chocolate Cakesicle', price: 'DM for price', badge: '', hasPhoto: true },
+      ]
+    },
+    {
+      slug: 'treat-boxes',
+      title: 'Treat Boxes & Baskets',
+      subtitle: 'Mix treat box · Candy box · Gift baskets',
+      description: 'Luxury mixed treat boxes and gift baskets packed with chocolate-dipped strawberries, dates, and handcrafted confections — the ultimate gifting experience.',
+      products: [
+        { name: 'Luxury Mixed Treat Box', price: 'DM for price', badge: 'Premium', hasPhoto: true },
+        { name: 'Blue Chocolate Treat Box', price: 'DM for price', badge: 'New', hasPhoto: true },
+        { name: 'Assorted Chocolate Covered Dates Gift Box', price: 'DM for price', badge: '', hasPhoto: true },
+        { name: 'Baby Shark Themed Strawberry Box', price: 'DM for price', badge: 'Kids', hasPhoto: true },
+        { name: 'Personalised Blue Chocolate Strawberry Basket', price: 'DM for price', badge: '', hasPhoto: true },
+        { name: "'Love You Baby' White Chocolate Strawberry Basket", price: 'DM for price', badge: '', hasPhoto: true },
+      ]
+    },
+    {
+      slug: 'sweet-treats',
+      title: 'Sweet Treats',
+      subtitle: 'Truffles · Fudge · Strawberries · Fruit platters',
+      description: 'Individual sweet treats and platters — from hand-dipped chocolate strawberries to luxury fresh fruit platters, perfect for any gathering or as a standalone gift.',
+      products: [
+        { name: 'Decorated Strawberries Box of 12 with Mini Spoons', price: '£22', badge: 'Popular', hasPhoto: true },
+        { name: 'Luxury Fresh Fruit Platter', price: 'DM for price', badge: '', hasPhoto: true },
+      ]
+    },
+    {
+      slug: 'novelty-themed',
+      title: 'Novelty & Themed',
+      subtitle: 'Smash pinata · Themed creations · Baby items',
+      description: 'Creative themed chocolate gifts for special occasions — from Ramadan and Eid to baby showers and themed parties. Unique designs that make every celebration memorable.',
+      products: [
+        { name: 'Fillable Crescent Moon Gift Box with Flowers', price: '£35', badge: 'Seasonal', hasPhoto: true },
+      ]
+    },
+  ],
+  featured: [
+    'Birthday Pink Heart Chocolate Box',
+    'Luxury Mixed Treat Box',
+    "Mother's Day Heart Chocolate Box",
+    'Decorated Strawberries Box of 12 with Mini Spoons',
+    'Blue Chocolate Treat Box',
+    "'I Love You' Heart Chocolate Box",
+  ]
+};
+
+const BADGE_OPTIONS = ['', 'Best Seller', 'New', 'Popular', 'Premium', 'Seasonal', 'Bespoke', 'Kids', 'Limited'];
+
+let state = JSON.parse(JSON.stringify(DATA));
+
+function render() {
+  renderCategories();
+  renderFeatured();
+}
+
+function renderCategories() {
+  const container = document.getElementById('categories-container');
+  container.innerHTML = '';
+
+  state.categories.forEach((cat, ci) => {
+    const section = document.createElement('div');
+    section.className = 'category-section';
+    section.innerHTML = `
+      <div class="category-header" onclick="toggleCategory(this)">
+        <div>
+          <h2>${escHtml(cat.title)}</h2>
+        </div>
+        <div style="display:flex;align-items:center;">
+          <span class="count">${cat.products.filter(p => !p._removed).length} products</span>
+          <span class="arrow">▼</span>
+        </div>
+      </div>
+      <div class="category-body">
+        <div class="desc-block">
+          <label>Category Name</label>
+          <input type="text" value="${escAttr(cat.title)}" onchange="state.categories[${ci}].title=this.value;updateCounts();">
+        </div>
+        <div class="desc-block">
+          <label>Subtitle (short list of what's included)</label>
+          <input type="text" value="${escAttr(cat.subtitle)}" onchange="state.categories[${ci}].subtitle=this.value;">
+        </div>
+        <div class="desc-block">
+          <label>Description</label>
+          <textarea onchange="state.categories[${ci}].description=this.value;">${escHtml(cat.description)}</textarea>
+        </div>
+        <div class="section-divider"></div>
+        <div id="products-${ci}"></div>
+        <button class="btn btn-add" onclick="addProduct(${ci})">+ Add New Product</button>
+      </div>
+    `;
+    container.appendChild(section);
+    renderProducts(ci);
+  });
+}
+
+function renderProducts(ci) {
+  const container = document.getElementById(`products-${ci}`);
+  if (!container) return;
+  container.innerHTML = '';
+  const cat = state.categories[ci];
+
+  cat.products.forEach((prod, pi) => {
+    const card = document.createElement('div');
+    card.className = `product-card${prod._removed ? ' marked-remove' : ''}${prod._new ? ' new-product' : ''}`;
+    card.innerHTML = `
+      <span class="product-number">${prod._new ? 'NEW' : pi + 1}</span>
+      <div class="product-fields">
+        <div class="field">
+          <label>Product Name</label>
+          <input type="text" value="${escAttr(prod.name)}" ${prod._removed ? 'disabled' : ''} onchange="state.categories[${ci}].products[${pi}].name=this.value;renderFeatured();">
+        </div>
+        <div class="field">
+          <label>Price</label>
+          <input type="text" value="${escAttr(prod.price)}" ${prod._removed ? 'disabled' : ''} onchange="state.categories[${ci}].products[${pi}].price=this.value;" placeholder="£XX or DM for price">
+        </div>
+        <div class="field">
+          <label>Badge</label>
+          <select ${prod._removed ? 'disabled' : ''} onchange="state.categories[${ci}].products[${pi}].badge=this.value;">
+            ${BADGE_OPTIONS.map(b => `<option value="${b}" ${prod.badge === b ? 'selected' : ''}>${b || '— None —'}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;">
+        <div class="photo-row">
+          <label>Photo:</label>
+          <div class="photo-status">
+            <button class="${prod.hasPhoto ? 'active-yes' : ''}" onclick="setPhoto(${ci},${pi},true)">Have it ✓</button>
+            <button class="${!prod.hasPhoto ? 'active-need' : ''}" onclick="setPhoto(${ci},${pi},false)">Need photo</button>
+          </div>
+        </div>
+        <div class="product-actions">
+          ${prod._removed
+            ? `<button class="btn btn-undo" onclick="undoRemove(${ci},${pi})">Undo Remove</button>`
+            : `<button class="btn btn-remove" onclick="removeProduct(${ci},${pi})">Remove</button>`
+          }
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function toggleCategory(header) {
+  header.parentElement.classList.toggle('collapsed');
+}
+
+function addProduct(ci) {
+  state.categories[ci].products.push({
+    name: '',
+    price: '',
+    badge: '',
+    hasPhoto: false,
+    _new: true
+  });
+  renderProducts(ci);
+  updateCounts();
+  // scroll to the new product
+  const container = document.getElementById(`products-${ci}`);
+  const lastCard = container.lastElementChild;
+  if (lastCard) {
+    lastCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    lastCard.querySelector('input').focus();
+  }
+}
+
+function removeProduct(ci, pi) {
+  state.categories[ci].products[pi]._removed = true;
+  renderProducts(ci);
+  updateCounts();
+}
+
+function undoRemove(ci, pi) {
+  state.categories[ci].products[pi]._removed = false;
+  renderProducts(ci);
+  updateCounts();
+}
+
+function setPhoto(ci, pi, has) {
+  state.categories[ci].products[pi].hasPhoto = has;
+  renderProducts(ci);
+}
+
+function updateCounts() {
+  document.querySelectorAll('.category-section').forEach((section, ci) => {
+    const count = state.categories[ci].products.filter(p => !p._removed).length;
+    section.querySelector('.count').textContent = `${count} products`;
+  });
+}
+
+function getAllProductNames() {
+  const names = [];
+  state.categories.forEach(cat => {
+    cat.products.forEach(prod => {
+      if (!prod._removed && prod.name.trim()) {
+        names.push(prod.name);
+      }
+    });
+  });
+  return names;
+}
+
+function renderFeatured() {
+  const body = document.getElementById('featured-body');
+  const allNames = getAllProductNames();
+
+  body.innerHTML = '';
+  for (let i = 0; i < 6; i++) {
+    const current = state.featured[i] || '';
+    const pick = document.createElement('div');
+    pick.className = 'featured-pick';
+    pick.innerHTML = `
+      <span class="pick-number">${i + 1}</span>
+      <select onchange="state.featured[${i}]=this.value;">
+        <option value="">— Select a product —</option>
+        ${allNames.map(n => `<option value="${escAttr(n)}" ${n === current ? 'selected' : ''}>${escHtml(n)}</option>`).join('')}
+      </select>
+    `;
+    body.appendChild(pick);
+  }
+}
+
+function getExportData() {
+  const output = {
+    lastEdited: new Date().toISOString(),
+    categories: state.categories.map(cat => ({
+      title: cat.title,
+      subtitle: cat.subtitle,
+      description: cat.description,
+      products: cat.products
+        .filter(p => !p._removed)
+        .filter(p => p.name.trim())
+        .map(p => ({
+          name: p.name,
+          price: p.price,
+          badge: p.badge || null,
+          hasPhoto: p.hasPhoto,
+          isNew: !!p._new,
+        })),
+      removedProducts: cat.products
+        .filter(p => p._removed && !p._new)
+        .map(p => p.name),
+    })),
+    featured: state.featured.filter(f => f),
+  };
+  return output;
+}
+
+function downloadJSON() {
+  const data = getExportData();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'chocolate-affair-products.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Downloaded! Send this file to Ibby');
+}
+
+function copyToClipboard() {
+  const data = getExportData();
+  const text = JSON.stringify(data, null, 2);
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('Copied! Paste it in a message to Ibby');
+  }).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Copied! Paste it in a message to Ibby');
+  });
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escAttr(s) { return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+render();
+</script>
+</body>
+</html>
